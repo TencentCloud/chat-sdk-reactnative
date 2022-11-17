@@ -1,0 +1,32 @@
+type: api
+group: V2TIMManager
+name: quitGroup
+features: 退出群组
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 退群者会收到 onQuitFromGroup 回调。
+    - 群组内其他成员会收到 onMemberLeave 回调。
+    - 对于陌生人社交群（Public）、临时会议群（Meeting）、社群（Community）和直播群（AVChatRoom），群主不可以退群，只能 解散群组。
+params:
+  - type: string
+    required: true
+    name: groupID
+    description: 需要退出的群组 ID
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+example: true

@@ -1,0 +1,26 @@
+type: class
+group: Message
+name: V2TimFileElem
+features: 文件消息单体属性
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: path
+    type: string
+    description: 文件路径（只有发送方才能获取到）
+  - name: fileName
+    type: string
+    description: 文件显示名称
+  - name: UUID
+    type: string
+    description: 文件 ID,内部标识，可用于外部缓存 key
+  - name: url
+    type: string
+    description: 文件的 URL 下载地址
+  - name: fileSize
+    type: number
+    description: 文件大小
+  - name: localUrl
+    type: string
+    description: 文件下载后的本地路径

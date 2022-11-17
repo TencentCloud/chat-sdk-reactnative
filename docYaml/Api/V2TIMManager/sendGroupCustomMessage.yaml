@@ -1,0 +1,7 @@
+type: api
+group: V2TIMManager
+name: sendGroupCustomMessage 
+features: 发送群聊自定义（信令）消息（最大支持 8KB）（自3.6.0开始弃用，请使用MessageManager下的高级收发消息）
+version: 1.1.1
+ignore: true
+deprecated: 简单消息自3.6.0开始弃用，请使用messageManager下的高级收发消息,此接口将在以后版本中被删除

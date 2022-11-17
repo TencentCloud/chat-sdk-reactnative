@@ -1,0 +1,14 @@
+type: enum
+name: FriendApplicationTypeEnum
+features: 加好友类型
+ignore: false
+attributes:
+  - name: V2TIM_FRIEND_APPLICATION_COME_IN
+    description: 别人发给我的加好友请求
+    value: 1
+  - name: V2TIM_FRIEND_APPLICATION_SEND_OUT
+    description: 我发给别人的加好友请求
+    value: 2
+  - name: V2TIM_FRIEND_APPLICATION_BOTH
+    description: 别人发给我的和我发给别人的加好友请求。仅在拉取时有效。
+    value: 3

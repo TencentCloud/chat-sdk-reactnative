@@ -1,0 +1,49 @@
+type: api
+group: messageManager
+name: createVideoMessage
+features: 创建视频文件
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 创建视频消息需要先获取到本地文件路径。[参考代码](https://cloud.tencent.com/document/product/269/77539#.E8.A7.86.E9.A2.91.E6.B6.88.E6.81.AF)。
+params:
+  - type: string
+    required: true
+    name: videoFilePath
+    description: 视频文件本地路径
+  - type: number
+    required: true
+    name: duration
+    description: 视频时长，单位 s
+  - type: string
+    required: true
+    name: type
+    description: 视频类型
+  - type: string
+    required: true
+    name: snapshotPath
+    description: 视频封面图片路径
+returnExample: |-
+    V2TimValueCallback<V2TimMsgCreateInfoResult>
+            
+    {
+        code: number,
+        desc: string,
+        data: {
+            id: string,
+            messageInfo: V2TimMessage,
+        }
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+    - type: '[V2TimMsgCreateInfoResult]()'
+      name: data
+      description: 创建后的视频信息
+example: true

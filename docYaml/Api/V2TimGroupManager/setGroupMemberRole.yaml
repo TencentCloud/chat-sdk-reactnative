@@ -1,0 +1,42 @@
+type: api
+group: V2TIMGroupManager
+name: setGroupMemberRole 
+features: 设置群成员的角色
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 普通成员被授权为管理员后，全员（包括被设置的成员）会收到 OnGrantAdministratorCallback 回调。
+    - 普通成员被取消管理员授权后，全员（包括被设置的成员）会收到 OnRevokeAdministratorCallback 回调。
+    - 公开群（Public）和会议群（Meeting）：只有群主才能对群成员进行普通成员和管理员之间的角色切换。
+    - 其他群不支持设置群成员角色。 转让群组请调用 [transferGroupOwner]() 接口。
+    - 会议群（Meeting）切换群成员角色之后，不会有 onGrantAdministrator 和 onRevokeAdministrator 通知回调
+params:
+  - type: string
+    required: true
+    name: groupID
+    description: 设置群组的id
+  - type: string
+    required: true
+    name: userID
+    description: 被设置角色的用户id
+  - type: '[GroupMemberRoleTypeEnum]()'
+    required: true
+    name: role
+    description: 用户被设置的角色属性
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+example: true

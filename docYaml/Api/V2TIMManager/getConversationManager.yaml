@@ -1,0 +1,18 @@
+type: api
+group: V2TIMManager
+name: getConversationManager 
+features: 会话功能入口
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 会话功能方法在核心类 TencentImSDKPlugin.v2TIMManager.getConversationManager()中。
+params:
+returnExample: |-
+    V2TIMConversationManager
+returnValues:
+    - type: V2TIMConversationManager
+      name: V2TIMConversationManager
+      description: 会话功能入口
+example: true

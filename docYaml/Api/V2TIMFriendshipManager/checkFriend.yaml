@@ -1,0 +1,39 @@
+type: api
+group: V2TIMFriendshipManager
+name: checkFriend
+features: 检查指定用户的好友关系
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - checkType 如果传入 V2TIM_FRIEND_TYPE_SINGLE，结果返回：V2TIM_FRIEND_RELATION_TYPE_NONE、V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST 两种情况
+    - checkType 如果传入 V2TIM_FRIEND_TYPE_BOTH，结果返回：V2TIM_FRIEND_RELATION_TYPE_NONE、V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST、 V2TIM_FRIEND_RELATION_TYPE_IN_OTHER_FRIEND_LIST、V2TIM_FRIEND_RELATION_TYPE_BOTH_WAY 四种情况
+params:
+  - type: string[]
+    required: true
+    name: userIDList
+    description: 需要检查的用户id列表
+  - type: '[FriendType]()'
+    required: true
+    name: checkType
+    description: 检查的类型
+returnExample: |-
+    V2TimValueCallback<V2TimFriendCheckResult[]>
+
+    {
+        code : number
+        desc : string
+        data : V2TimFriendCheckResult[]
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符 
+    - type: '[V2TimFriendCheckResult]()[]'
+      name: data
+      description: 检查请求结果列表
+example: true

@@ -1,0 +1,126 @@
+type: api
+group: messageManager
+name: sendMessage
+features: 发送消息
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 6.0 及以上版本支持 groupID 和 receiver 同时设置，如果同时设置，表示在群内给 receiver 发送定向消息，如果需要给多个 receiver 发送定向消息，请先调用 createTargetedGroupMessage 接口创建定向消息，再调用 sendMessage 接口发送。
+    - 设置 offlinePushInfo 字段，需要先在 V2TIMOfflinePushManager 开启推送，推送开启后，除了自定义消息，其他消息默认都会推送。
+    - 如果自定义消息也需要推送，请设置 offlinePushInfo 的 desc 字段，设置成功后，推送的时候会默认展示 desc 信息。
+    - AVChatRoom 群聊不支持 onlineUserOnly 字段，如果是 AVChatRoom 请将该字段设置为 false。
+    - 如果设置 onlineUserOnly 为 true 时，该消息为在线消息且不会被计入未读计数。
+    -
+    - '[发送文本消息](https://cloud.tencent.com/document/product/269/77539#.E5.8F.91.E9.80.81.E6.96.87.E6.9C.AC.E6.B6.88.E6.81.AF)'
+    - '[发送自定义消息](https://cloud.tencent.com/document/product/269/77539#.E5.8F.91.E9.80.81.E8.87.AA.E5.AE.9A.E4.B9.89.E6.B6.88.E6.81.AF)'
+    - '[发送富媒体消息](https://cloud.tencent.com/document/product/269/77539#.E5.8F.91.E9.80.81.E5.AF.8C.E5.AA.92.E4.BD.93.E6.B6.88.E6.81.AF)'
+    - '[合并转发](https://cloud.tencent.com/document/product/269/77543)'
+    - '[实现“对方正在输入”功能](https://cloud.tencent.com/document/product/269/77550)'
+    - '[群 @ 消息](https://cloud.tencent.com/document/product/269/77553)'
+    - '[群定向消息](https://cloud.tencent.com/document/product/269/77554)'
+    - '[发送不更新 lastMessage 的消息](https://cloud.tencent.com/document/product/269/77557)'
+    - '[设置只能给好友发消息](https://cloud.tencent.com/document/product/269/77570#.E8.AE.BE.E7.BD.AE.E5.8F.AA.E8.83.BD.E7.BB.99.E5.A5.BD.E5.8F.8B.E5.8F.91.E6.B6.88.E6.81.AF)'
+params:
+  - type: string
+    required: true
+    name: id
+    description: 创建消息返回的id 参数为传入参数对象的参数
+  - type: string
+    required: false
+    name: receiver
+    description: 单聊消息接收者 userID。如果是单聊消息，必传。 参数为传入参数对象的参数
+  - type: string
+    required: false
+    name: groupID
+    description: 群聊 groupID。如果是群聊消息，必传。参数为传入参数对象的参数
+  - type: '[MessagePriorityEnum]()'
+    required: false
+    name: priority
+    description: 消息优先级 参数为传入参数对象的参数
+  - type: boolean
+    required: false
+    name: onlineUserOnly
+    description: 是否只有在线用户才能收到 参数为传入参数对象的参数
+  - type: '[OfflinePushInfo]()'
+    required: false
+    name: offlinePushInfo
+    description: 离线推送信息	 参数为传入参数对象的参数
+  - type: boolean
+    required: false
+    name: needReadReceipt
+    description: 消息是否需要已读回执 参数为传入参数对象的参数
+  - type: boolean
+    required: false
+    name: isExcludedFromUnreadCount
+    description: 发送消息是否计入会话未读数 参数为传入参数对象的参数
+  - type: boolean
+    required: false
+    name: isExcludedFromLastMessage
+    description: 发送消息是否计入会话 lastMessage 参数为传入参数对象的参数
+  - type: string
+    required: false
+    name: cloudCustomData
+    description: 消息云端数据 参数为传入参数对象的参数
+  - type: string
+    required: false
+    name: localCustomData
+    description: 消息本地数据 参数为传入参数对象的参数
+returnExample: |-
+    V2TimValueCallback<V2TimMessage>
+
+    {
+        code : number
+        desc : string
+        data : {
+          msgID: string
+          timestamp: number
+          progress: number
+          sender: string
+          nickName: string
+          friendRemark: string
+          faceUrl: string
+          nameCard: string
+          groupID: string
+          userID: string
+          status: number
+          elemType: number
+          textElem: V2TimTextElem
+          customElem: V2TimCustomElem
+          imageElem: V2TimImageElem
+          soundElem: V2TimSoundElem
+          videoElem: V2TimVideoElem
+          fileElem: V2TimFileElem
+          locationElem: V2TimLocationElem
+          faceElem: V2TimFaceElem
+          groupTipsElem: V2TimGroupTipsElem
+          mergerElem: V2TimMergerElem
+          localCustomData: string
+          localCustomInt: number
+          cloudCustomData: string
+          isSelf: boolean
+          isRead: boolean
+          isPeerRead: boolean
+          priority: number
+          offlinePushInfo: V2TimOfflinePushInfo
+          groupAtUserList: string[]
+          seq: string
+          random: number
+          isExcludedFromUnreadCount: boolean
+          isExcludedFromLastMessage: boolean
+          id: string
+          needReadReceipt: boolean
+        }
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+    - type: '[V2TimMessage]()'
+      name: data
+      description: 发送的信息
+example: true

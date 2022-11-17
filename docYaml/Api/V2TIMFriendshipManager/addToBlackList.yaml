@@ -1,0 +1,35 @@
+type: api
+group: V2TIMFriendshipManager
+name: addToBlackList
+features: 添加用户到黑名单
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 1. 被拉黑的用户默认不会感知到 “被拉黑” 的状态，消息发送后不会返回已被对方拉黑的错误码。
+    - 2. 如果希望被拉黑的用户在发消息时返回已被对方拉黑的错误提醒，请在 即时通信 IM 控制台 >【功能配置】>【登录与消息】>【黑名单检查】中关闭 ”发送消息后展示发送成功“。关闭后，被拉黑的用户在发送消息时，SDK 会报 20007 错误码。
+params:
+  - type: string[]
+    required: true
+    name: userIDList
+    description: 需要加入黑名单的好友id列表
+returnExample: |-
+    V2TimValueCallback<V2TimFriendOperationResult[]>
+
+    {
+        code : number
+        desc : string
+        data : V2TimFriendOperationResult[]//添加黑名单请求的结果信息
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+    - type: '[V2TimFriendOperationResult]()[]'
+      name: data
+      description: 添加黑名单请求的结果信息
+example: true

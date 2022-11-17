@@ -1,0 +1,73 @@
+type: api
+group: V2TIMFriendshipManager
+name: addFriend
+features: 添加好友
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 根据对方用户资料中的加好友需要验证与否，可以分为两种处理流程
+    - 1. 第一种：加好友不需要对方验证
+    - 用户 A 和 B 调用 setFriendListener 设置关系链监听器。
+    - 用户 B 通过 setSelfInfo 函数里的 allowType 字段设置为加好友不需要验证(V2TIM_FRIEND_ALLOW_ANY)。
+    - 用户 A 调用 addFriend 申请添加 B 为好友即可添加成功。添加成功后，按照申请参数 addType 的设置有两种情况：
+    - 如果设置为双向好友 (V2TIM_FRIEND_TYPE_BOTH) ，则用户 A 和 B 都会收到 onFriendListAdded 回调；
+    - 如果设置为单向好友(V2TIM_FRIEND_TYPE_SINGLE)，则只有用户 A 收到 onFriendListAdded 回调。
+    - 2. 第二种：加好友需要对方验证
+    - 用户 B 通过 setSelfInfo 函数里的 allowType 字段设置为加好友需要验证(V2TIM_FRIEND_NEED_CONFIRM)。
+    - 用户 A 调用 addFriend 申请添加 B 为好友，接口的成功回调参数中 resultCode 返回 30539,表示需要等待用户 B 的验证。同时 A 和 B 都会收到 onFriendApplicationListAdded 的回调。
+    - 用户 B 会收到 onFriendApplicationListAdded 的回调，当参数 type 为 V2TIM_FRIEND_APPLICATION_COME_IN 时，可以选择接受或者拒绝：
+    - B 调用 acceptFriendApplication 接受好友请求。如果参数接受类型为仅同意加单向好友(V2TIM_FRIEND_ACCEPT_AGREE)时：
+    - A 会收到 onFriendListAdded 回调，说明单向加好友成功。
+    - B 会收到 onFriendApplicationListDeleted 回调，此时 B 成为 A 的好友，但 A 仍不是 B 的好友。
+    - B 调用 acceptFriendApplication 接受好友请求，如果参数接受类型为同意加双向好友时(V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD),A 和 B 都会收到 onFriendListAdded 回调，说明互相加好友成功。
+    - B 调用 refuseFriendApplication 拒绝好友请求，双方都会收到 onFriendApplicationListDeleted 回调。
+params:
+  - type: string
+    required: true
+    name: userID
+    description: 需要添加的用户id
+  - type: string
+    required: false 
+    name: remark
+    description: 添加的好友的好友备注
+  - type: string
+    required: false
+    name: friendGroup
+    description: 添加好友所在分组
+  - type: string
+    required: false
+    name: addWording
+    description: 添加好友附带信息
+  - type: string
+    required: false
+    name: addSource
+    description: 添加来源描述
+  - type: '[FriendType]()'
+    required: true
+    name: addType
+    description: 设置加好友类型，默认双向
+returnExample: |-
+    V2TimValueCallback<V2TimFriendOperationResult>
+
+    {
+        code : number
+        desc : string
+        data : {
+            resultCode : number//添加操作请求错误码
+            resultInfo : string//添加操作请求结果描述
+            userID : string//用户id
+        }
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+    - type: '[V2TimFriendOperationResult]()'
+      name: data
+      description: 添加请求结果
+example: true

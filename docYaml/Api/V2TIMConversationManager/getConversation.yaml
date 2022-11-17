@@ -1,0 +1,53 @@
+type: api
+group: V2TIMConversationManager
+name: getConversation
+features: 获取会话列表
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 本地存储的会话列表没有数量上限。
+    - 云端存储的会话列表最大数量为 100。如果您希望扩展此数量，可以升级旗舰版。旗舰版用户可以在控制台配置最高数量为 500。
+    - 长时间没有信息变更，该会话在云端最多保存 7 天。如需放宽限制，请 [联系我们](https://console.cloud.tencent.com/workorder/category)。
+    - 本地存储的会话和云端存储的会话并不总是一致的，如果用户不主动调用 deleteConversation 接口删除本地的会话，该会话就会一直存在。而云端存储的会话最大只会保存 100 条，且对于长时间没有信息变更的会话，云端最多保存 7 天，所以不同的终端本地显示的会话可能会不一样。
+params:
+  - type: string
+    required: true
+    name: conversationID
+    description: 会话唯一 ID，如果是 C2C 单聊，组成方式为 c2c_userID，如果是群聊，组成方式为 group_groupID
+returnExample: |-
+    V2TimValueCallback<V2TimConversation>
+
+    {
+        code : number
+        desc : string
+        data : {
+          conversationID : string
+          type : number
+          userID : string
+          groupID : string
+          showName : string
+          faceUrl : string
+          groupType : string
+          unreadCount : number
+          lastMessage : V2TimMessage
+          draftText : string
+          draftTimestamp : number
+          isPinned : boolean
+          recvOpt : number
+          groupAtInfoList : V2TimGroupAtInfo[]
+          orderkey : number
+        }
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+    - type: '[V2TimConversation]()'
+      name: data
+      description: 此次拉取到的消息信息
+example: true

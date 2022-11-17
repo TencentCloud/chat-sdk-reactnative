@@ -1,0 +1,34 @@
+type: api
+group: V2TIMFriendshipManager
+name: getFriendGroups
+features: 获取好友分组列表
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 1. groupNameList 传入 null 获得所有分组信息。
+params:
+  - type: string[]
+    required: true
+    name: groupNameList
+    description: 要获取信息的好友分组名称列表
+returnExample: |-
+    V2TimValueCallback<V2TimFriendGroup[]>
+
+    {
+        code : number
+        desc : string
+        data : V2TimFriendGroup[]// 查询到的分组信息
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+    - type: '[V2TimFriendGroup]()[]'
+      name: data
+      description: 查询到的分组信息
+example: true

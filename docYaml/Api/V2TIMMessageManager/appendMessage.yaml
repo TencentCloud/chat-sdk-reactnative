@@ -1,0 +1,77 @@
+type: api
+group: messageManager
+name: appendMessage
+features: 为一条消息，附着另一条消息，添加至链表。可用于创建多Element消息，实现图文消息混排等效果。
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 为一个消息添加一系列额外的消息，一般用于消息中图文混排。
+    - 只能在创建message的阶段进行appendMessage操作。
+params:
+  - type: string
+    required: true
+    name: createMessageBaseId
+    description: 需要添加Element的创建的消息id
+  - type: string
+    required: true
+    name: createMessageAppendId
+    description: 添加的创建消息id
+returnExample: |-
+    V2TimValueCallback<V2TimMessage>
+
+    {
+        code : number
+        desc : string
+        data : {
+          msgID: string
+          timestamp: number
+          progress: number
+          sender: string
+          nickName: string
+          friendRemark: string
+          faceUrl: string
+          nameCard: string
+          groupID: string
+          userID: string
+          status: number
+          elemType: number
+          textElem: V2TimTextElem
+          customElem: V2TimCustomElem
+          imageElem: V2TimImageElem
+          soundElem: V2TimSoundElem
+          videoElem: V2TimVideoElem
+          fileElem: V2TimFileElem
+          locationElem: V2TimLocationElem
+          faceElem: V2TimFaceElem
+          groupTipsElem: V2TimGroupTipsElem
+          mergerElem: V2TimMergerElem
+          localCustomData: string
+          localCustomInt: number
+          cloudCustomData: string
+          isSelf: boolean
+          isRead: boolean
+          isPeerRead: boolean
+          priority: number
+          offlinePushInfo: V2TimOfflinePushInfo
+          groupAtUserList: string[]
+          seq: string
+          random: number
+          isExcludedFromUnreadCount: boolean
+          isExcludedFromLastMessage: boolean
+          id: string
+          needReadReceipt: boolean
+        }
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+    - type: '[V2TimMessage]()'
+      name: data
+      description: 添加消息后的信息
+example: true

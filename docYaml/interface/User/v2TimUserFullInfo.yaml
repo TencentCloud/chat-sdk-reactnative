@@ -1,0 +1,46 @@
+
+type: class
+group: User
+name: V2TimUserFullInfo
+features: 用户全量信息属性
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: userID
+    type: string
+    description: 用户 ID
+  - name: nickName
+    type: string
+    description: 用户昵称
+  - name: faceUrl
+    type: string
+    description: 用户头像 url
+  - name: selfSignature
+    type: string
+    description: 用户的签名
+  - name: gender
+    type: number
+    description: 用户的性别
+    extra:
+      - 1:男
+      - 2:女
+  - name: allowType
+    type: number
+    description: 用户的好友验证方式
+    extra:
+      - 0:允许所有人加我好友
+      - 1:不允许所有人加我好友
+      - 2:加我好友需我确认
+  - name: customInfo
+    type: '[StringMap]()'
+    description: 用户的自定义信息
+  - name: role
+    type: number
+    description: 用户的角色
+  - name: level
+    type: number
+    description: 用户的等级
+  - name: birthday
+    type: number
+    description: 用户生日

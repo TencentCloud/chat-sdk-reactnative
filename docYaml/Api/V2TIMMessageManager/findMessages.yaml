@@ -1,0 +1,35 @@
+type: api
+group: messageManager
+name: findMessages
+features: 查询指定会话中的本地消息
+version: 1.1.1
+ignore: true
+deprecated:
+precautions:
+  info:
+    - 只支持查询本地消息，例如接收到的消息或者调用拉取历史消息接口获取到的消息。
+    - 不支持查询直播群（AVChatRoom）的消息，因为其消息不会保存在本地。
+params:
+  - type: string[]
+    required: true
+    name: messageIDList
+    description: 消息ID列表
+returnExample: |-
+    V2TimValueCallback<V2TimMessage[]>
+
+    {
+        code : number
+        desc : string
+        data : V2TimMessage[]
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+    - type: '[V2TimMessage]()[]'
+      name: data
+      description: 获取的指定会话中的本地消息
+example: false

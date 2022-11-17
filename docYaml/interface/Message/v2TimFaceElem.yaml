@@ -1,0 +1,17 @@
+type: class
+group: Message
+name: V2TimFaceElem
+features: 表情消息单体属性
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: index
+    type: number
+    description: 表情索引，用户自定义
+    extra:
+      - 表情消息由 TIMFaceElem 定义，SDK 并不提供表情包，如果开发者有表情包，可使用 index 存储表情在表情包中的索引，由用户自定义，或者直接使用 data 存储表情二进制信息以及字符串 key，都由用户自定义，SDK 内部只做透传。
+      - index 和 data 只需要传入一个即可，ImSDK 只是透传这两个数据。
+  - name: data
+    type: string
+    description: 额外数据，用户自定义

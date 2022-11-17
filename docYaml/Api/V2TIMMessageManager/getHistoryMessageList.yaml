@@ -1,0 +1,74 @@
+type: api
+group: messageManager
+name: getHistoryMessageList
+features: 获取历史消息高级接口
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 本地存储的历史消息无时间限制，但云端存储的历史消息有存储时长的限制：
+    - 体验版：免费存储 7 天，不支持延长
+    - 专业版：免费存储 7 天，支持延长
+    - 旗舰版：免费存储 30 条，支持延长
+    - 延长历史消息存储时长是增值服务，您可以登录 [即时通信 IM 控制台](https://console.cloud.tencent.com/im) 修改相关配置，具体计费说明请参加 [增值服务资费](https://cloud.tencent.com/document/product/269/11673#zz) 。
+    - 富媒体消息（图片、文件、语音等）对应的文件存储时长，与历史消息存储时长保持一致。
+    - 
+    - 该接口除了支持普通拉取单聊、群聊历史消息外，还支持以下高级特性：
+    - 支持设置拉取消息的位置：从本地拉取、从云端拉取。
+    - 支持按照指定的方向拉取：往消息时间更老的方向拉取、往消息时间更新的方向拉取。
+    - 支持拉取本地指定的消息类型：文本、图片、语音、视频、文件、表情、群 tips 消息、合并消息、自定义消息等。
+    - 
+    - 如果设置为拉取云端消息，当 SDK 检测到没有网络，默认会直接返回本地数据 只有会议群（Meeting）才能拉取到进群前的历史消息，直播群（AVChatRoom）消息不存漫游和本地数据库，调用这个接口无效
+    - 只有会议群（Meeting）才能拉取到进群前的历史消息，直播群（AVChatRoom）消息不存漫游和本地数据库，调用这个接口无效
+    -
+    - '[消息存储策略](https://cloud.tencent.com/document/product/269/77540#.E6.B6.88.E6.81.AF.E5.AD.98.E5.82.A8.E7.AD.96.E7.95.A5)'
+    - '[常见问题](https://cloud.tencent.com/document/product/269/77542#.E5.B8.B8.E8.A7.81.E9.97.AE.E9.A2.98)'
+params:
+  - type: '[HistoryMsgGetTypeEnum]()'
+    required: false
+    name: getType
+    description: 拉取消息的位置及方向，可以设置拉取 本地/云端 的 更老/更新 的消息
+  - type: string
+    required: false
+    name: userID
+    description: 拉取指定用户的单聊历史消息
+  - type: string
+    required: false
+    name: groupID
+    description: 拉取指定群组的群聊历史消息
+  - type: number
+    required: false
+    name: lastMsgSeq
+    description: 最后一条消息 seq，表示从哪条消息开始拉取历史消息,由于返回的消息列表会包含 lastMsgSeq 所对应的消息，所以在拉取群聊历史消息时，不建议使用 lastMsgSeq 来续拉。
+  - type: number
+    required: true
+    name: count
+    description: 拉取消息的个数，不宜太多，会影响消息拉取的速度，这里建议一次拉取 20 个。但是，Web端不能超过15个。
+  - type: string
+    required: false
+    name: lastMsgID
+    description: 获取消息的起始消息id，如果传 null，起始消息为会话的最新消息
+  - type: number[]
+    required: false
+    name: messageTypeList
+    description: 用于过滤历史信息属性，若为空则拉取所有属性信息。详情见[MessageElemType]()
+returnExample: |-
+    V2TimValueCallback<V2TimMessage[]>
+
+    {
+        code : number
+        desc : string
+        data : V2TimMessage[]
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+    - type: '[V2TimMessage]()[]'
+      name: data
+      description: 获取的历史消息
+example: true

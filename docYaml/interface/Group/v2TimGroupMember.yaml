@@ -1,0 +1,14 @@
+type: class
+group: Group
+name: V2TimGroupMember
+features: 群组用户信息
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: userID
+    type: string
+    description: 群成员id
+  - name: role
+    type: '[GroupMemberRoleTypeEnum]()'
+    description: 群成员角色

@@ -1,0 +1,50 @@
+type: api
+group: V2TIMManager
+name: login 
+features: 用户登录
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 首次登录一个 IM 帐号时，不需要先注册这个帐号。在登录成功后，IM 自动完成这个帐号的注册。
+    - 
+    - 您需要在以下场景调用 login 接口：
+    - App 启动后首次使用 IM SDK 的功能。
+    - 登录时票据过期：login 接口的回调会返回 ERR_USER_SIG_EXPIRED（6206） 或 ERR_SVR_ACCOUNT_USERSIG_EXPIRED（70001） 错误码，此时请您生成新的 userSig 重新登录。
+    - 在线时票据过期：用户在线期间也可能收到 [V2TimSDKListener]()中的 onUserSigExpired 回调，此时需要您生成新的 userSig 并重新登录。
+    - 在线时被踢下线：用户在线情况下被踢，IM SDK 会通过 [V2TimSDKListener]()中的 onKickedOffline 回调通知给您，此时可以在 UI 提示用户，并调用 login 重新登录。
+    - 
+    - 以下场景无需调用 login 接口：
+    - 用户的网络断开并重新连接后，不需要调用 login 函数，IM SDK 会自动上线。
+    - 当一个登录过程在进行时，不需要进行重复登录。
+    - 调用 IM SDK 接口成功登录后，将会开始计算 DAU，请根据业务场景合理调用登录接口，避免出现 DAU 过高的情况。
+    - 在一个 App 中，IM SDK 不支持多个帐号同时在线，如果同时登录多个帐号，只有最后登录的帐号在线。
+    - 
+    - 只有获取会话的接口可以在调用登录接口后立即调用。其他各项功能的接口，必须在 SDK 登录成功后才能调用。因此在使用其他功能之前，请务必登录且确保登录成功，否则可能导致功能异常或不可用！
+    -
+    - '[多端登录与互踢](https://cloud.tencent.com/document/product/269/77538#.E5.A4.9A.E7.AB.AF.E7.99.BB.E5.BD.95.E4.B8.8E.E4.BA.92.E8.B8.A2)'
+params:
+  - type: string
+    required: true
+    name: userID
+    description: 登录用户唯一标识
+  - type: string
+    required: true
+    name: userSig
+    description: 登录票据，计算方法请参考 [UserSig 后台 API](https://cloud.tencent.com/document/product/269/32688)。
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+example: true

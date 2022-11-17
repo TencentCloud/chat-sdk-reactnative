@@ -1,0 +1,22 @@
+type: class
+group: User
+name: V2TimUserStatus
+features: 用户状态信息属性
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: userID
+    type: string
+    description: 用户 ID
+  - name: statusType
+    type: number
+    description: 用户状态
+    extra:
+      - 0:未知状态
+      - 1:在线状态
+      - 2:离线状态
+      - 3:未登录（如主动调用 logout 接口，或者账号注册后还未登录）
+  - name: customStatus
+    type: string
+    description: 用户的自定义状态

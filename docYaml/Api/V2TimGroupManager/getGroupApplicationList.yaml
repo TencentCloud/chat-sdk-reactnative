@@ -1,0 +1,30 @@
+type: api
+group: V2TIMGroupManager
+name: getGroupApplicationList 
+features: 获取加群的申请列表
+version: 1.1.1
+ignore: false
+deprecated:
+params:
+returnExample: |-
+    V2TimValueCallback<V2TimGroupApplicationResult>
+
+    {
+        code : number
+        desc : string
+        data : {
+            groupApplicationList : V2TimGroupApplication[]// 申请加群信息
+            unreadCount : number // 未读的申请数量
+        }
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+    - type: '[V2TimGroupApplicationResult]()'
+      name: data
+      description: 查询到的申请加群信息
+example: true

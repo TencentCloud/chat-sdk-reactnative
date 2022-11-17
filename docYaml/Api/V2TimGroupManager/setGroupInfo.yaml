@@ -1,0 +1,33 @@
+type: api
+group: V2TIMGroupManager
+name: setGroupInfo 
+features: 修改群资料
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 如果您事先调用 [addGroupListener]() 添加了群组事件监听器，群资料被修改后，全员会收到 OnGroupInfoChangedCallback 回调。
+    - 不同类型的群组，可以修改群资料的成员角色不同,具体可见[文档](https://cloud.tencent.com/document/product/269/77564#.E4.BF.AE.E6.94.B9.E7.BE.A4.E8.B5.84.E6.96.99)
+    -
+    - '[禁言整个群](https://cloud.tencent.com/document/product/269/77565#.E7.A6.81.E8.A8.80.E6.95.B4.E4.B8.AA.E7.BE.A4)'
+params:
+  - type: '[V2TimGroupInfo]()'
+    required: true
+    name: info
+    description: 群资料设置信息
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+example: true

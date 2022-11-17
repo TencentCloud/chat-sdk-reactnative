@@ -1,0 +1,18 @@
+type: api
+group: V2TIMManager
+name: getGroupManager 
+features: 高级群组功能入口
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 高级群组功能方法在核心类 TencentImSDKPlugin.v2TIMManager.getGroupManager()中。
+params:
+returnExample: |-
+    V2TIMGroupManager
+returnValues:
+    - type: V2TIMGroupManager
+      name: V2TIMGroupManager
+      description: 高级群组功能入口
+example: true

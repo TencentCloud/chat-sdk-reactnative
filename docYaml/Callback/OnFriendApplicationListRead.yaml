@@ -1,0 +1,11 @@
+type: callback
+group: 
+name: OnFriendApplicationListRead
+features: 好友请求已读的回调
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnFriendApplicationListRead = void Function()
+returnValues:
+example: true

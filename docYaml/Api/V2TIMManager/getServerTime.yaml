@@ -1,0 +1,27 @@
+type: api
+group: V2TIMManager
+name: getServerTime 
+features: 获取服务器当前时间
+version: 1.1.1
+ignore: false
+deprecated:
+params:
+returnExample: |-
+    V2TimValueCallback<number>
+
+    {
+        code : number
+        desc : string
+        data : number//服务器当前时间
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+    - type: number
+      name: data
+      description: 服务器当前时间
+example: true

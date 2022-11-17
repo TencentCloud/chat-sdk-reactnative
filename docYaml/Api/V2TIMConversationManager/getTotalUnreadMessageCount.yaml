@@ -1,0 +1,40 @@
+type: api
+group: V2TIMConversationManager
+name: getTotalUnreadMessageCount
+features: 获取会话未读总数
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 用户的会话列表中一般会有若干个会话，如果某个会话收到了新消息，通常需要在列表的 cell 中以小红点或者数字角标的方式，向用户展示该会话的未读消息数，提醒用户尚未阅读。
+    -
+    - 通常情况下，如果想得到所有会话的未读消息总数，可以遍历会话列表得到每个会话的信息 V2TimConversation，然后再把所有的 V2TimConversation 的 unreadCount 相加起来，展示在 UI 上。
+    - 但 IM SDK 为您提供了直接查询所有会话未读消息总数的 API getTotalUnreadMessageCount。
+    - 当会话的未读总数发生变更时，SDK 还会主动通过回调 onTotalUnreadMessageCountChanged，将最新的未读总数通知给您。
+    -
+    - 用户点击进入会话后退回到会话列表，需要清除未读消息数。清除后，会话列表的小红点或数字角标需要随之消失。
+    - IM SDK 针对待清空会话未读数的不同会话类型，提供了 3 个 API：
+    - 清空单聊会话未读消息数 [markC2CMessageAsRead]()。
+    - 清空群聊会话未读消息数 [markGroupMessageAsRead]()。
+    - 清空全部会话未读消息数 [markAllMessageAsRead]()。
+params:
+returnExample: |-
+    V2TimValueCallback<number>
+
+    {
+        code : number
+        desc : string
+        data : number//会话未读总数
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+    - type: number
+      name: data
+      description: 会话未读总数
+example: true

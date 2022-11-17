@@ -1,0 +1,21 @@
+type: class
+group: 
+name: V2TimValueCallback
+features: 腾讯云IM SDK，所有API接口，通用的返回结果对象，携带请求结果与返回数据的类
+version: 1.1.1
+ignore: false
+deprecated: 
+precautions:
+  info:
+    - 如果API调用成功，code为0，data为请求的内容或操作的结果。
+    - 如果API调用失败，code为[错误码](https://cloud.tencent.com/document/product/269/1671)，desc表示请求失败的原因。
+attributes:
+  - name: code
+    type: number
+    description: 请求结果的错误码
+  - name: data
+    type: T（根据不同接口而不同）
+    description: 请求结果携带的数据
+  - name: desc
+    type: string
+    description: 请求结果的描述

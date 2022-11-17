@@ -1,0 +1,33 @@
+type: api
+group: V2TIMManager
+name: logout 
+features: 登出
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 退出登录，如果切换账号，需要 logout 回调成功或者失败后才能再次 login，否则login可能会失败。
+    - 
+    - 普通情况下，如果您的应用生命周期跟 IM SDK 生命周期一致，退出应用前可以不登出，直接退出即可。
+    - App 启动后首次使用 IM SDK 的功能。
+    - 但有些特殊场景，例如您只在进入特定界面后才使用 IM SDK，退出界面后不再使用，此时可以调用logout 接口登出 SDK。登出成功后，不会再收到其他人发送的新消息。注意这种情况下，登出成功后还需要调 unInitSDK 对 SDK 进行反初始化。
+    - 
+    - 如果您希望在应用中实现帐号切换的需求，只需要每次切换帐号时调用 login 即可。
+    - 例如已经登录了 alice，现在要切换到 bob，只需要直接 login bob 即可。login bob 前无需显式调用 logout alice，IM SDK 内部会自动处理。
+params:
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+example: true

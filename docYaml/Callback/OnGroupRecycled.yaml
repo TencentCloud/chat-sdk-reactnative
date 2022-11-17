@@ -1,0 +1,20 @@
+type: callback
+group: 
+name: OnGroupRecycled
+features: 群被回收（全员能收到）
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnGroupRecycled = void Function(
+  string groupID,
+  V2TimGroupMemberInfo opUser
+  )
+returnValues:
+  - type: string
+    name: groupID
+    description: 群 ID
+  - type: '[V2TimGroupMemberInfo]()'
+    name: opUser
+    description: 处理人
+example: true

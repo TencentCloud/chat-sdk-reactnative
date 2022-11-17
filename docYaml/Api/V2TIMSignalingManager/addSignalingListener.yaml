@@ -1,0 +1,25 @@
+type: api
+group: V2TIMSignalingManager
+name: addSignalingListener
+features: 添加信令监听器
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 信令接口是基于 IM 消息提供的一套邀请流程控制的接口，可以实现多种实时场景，例如：
+    - 直播聊天室中进行上麦、下麦管理。
+    - 聊天场景中实现类似微信中的音视频通话功能。
+    - 教育场景中老师邀请同学们举手、发言的流程控制。
+    - 使用addSignalingListener会在所有的信令监听器列表中新增一个信令监听器。
+    -
+    - '[场景案例](https://cloud.tencent.com/document/product/269/77577#.E5.BA.94.E7.94.A8.E5.9C.BA.E6.99.AF.E6.A1.88.E4.BE.8B)'
+params:
+  - type: '[V2TimSignalingListener]()'
+    required: true
+    name: listener
+    description: 信令监听器
+returnExample: |-
+    void
+returnValues:
+example: true

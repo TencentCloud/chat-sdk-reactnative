@@ -1,0 +1,48 @@
+type: class
+group: Listener
+name: V2TimFriendshipListener
+features: 资料关系链回调
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: onFriendApplicationListAdded
+    type: '[OnFriendApplicationListAdded]()'
+    description: 好友申请新增通知
+    extra:
+      - 两种情况会收到这个回调：
+      - 1.自己申请加别人好友
+      - 2.别人申请加自己好友
+  - name: onFriendApplicationListDeleted
+    type: '[OnFriendApplicationListDeleted]()'
+    description: 好友申请删除通知
+    extra:
+      - 四种情况会收到这个回调：
+      - 1.调用 deleteFriendApplication 主动删除好友申请
+      - 2.调用 refuseFriendApplication 拒绝好友申请
+      - 3.调用 acceptFriendApplication 同意好友申请
+      - 4.申请加别人好友被拒绝
+  - name: onFriendApplicationListRead
+    type: '[OnFriendApplicationListRead]()'
+    description: 好友申请已读通知，如果调用 [setFriendApplicationRead]() 设置好友申请列表已读，会收到这个回调（主要用于多端同步）
+  - name: onFriendListAdded
+    type: '[OnFriendListAdded]()'
+    description: 好友新增通知
+  - name: onFriendListDeleted
+    type: '[OnFriendListDeleted]()'
+    description: 好友删除通知
+    extra:
+      - 两种情况会收到这个回调：
+      - 1.自己删除好友（单向和双向删除都会收到回调）
+      - 2.好友把自己删除（双向删除会收到）
+  - name: onBlackListAdd
+    type: '[OnBlackListAdd]()'
+    description: 黑名单新增通知
+  - name: onBlackListDeleted
+    type: '[OnBlackListDeleted]()'
+    description: 黑名单删除通知
+  - name: onFriendInfoChanged
+    type: '[OnFriendInfoChanged]()'
+    description: 好友资料变更通知
+
+ 

@@ -1,0 +1,38 @@
+type: api
+group: V2TIMFriendshipManager
+name: createFriendGroup
+features: 新建好友分组
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 1. 在某些场景下，您可能需要对好友进行分组，例如分为 "大学同学"、"公司同事" 等，您可以调用以下接口实现。
+params:
+  - type: string
+    required: true
+    name: groupName
+    description: 新建的分组名称
+  - type: string[]
+    required: false
+    name: userIDList
+    description: 要添加到分组中的好友 userID 列表
+returnExample: |-
+    V2TimValueCallback<V2TimFriendOperationResult[]>
+
+    {
+        code : number
+        desc : string
+        data : V2TimFriendOperationResult[]
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+    - type: '[V2TimFriendOperationResult]()[]'
+      name: data
+      description: 新建结果列表
+example: true

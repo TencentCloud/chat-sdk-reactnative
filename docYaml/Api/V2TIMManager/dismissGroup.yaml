@@ -1,0 +1,33 @@
+type: api
+group: V2TIMManager
+name: dismissGroup
+features: 解散群组
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 您可以调用 dismissGroup 解散群组，全员会收到 onGroupDismissed回调。
+    - 如果您在服务器端设置了允许自动解散不活跃的群，当群被服务器端自动解散后，SDK 会收到 onGroupRecycled回调。
+    - Work：只有app管理员可以解散群组。
+    - 其他群：群主可以解散群组。
+params:
+  - type: string
+    required: true
+    name: groupID
+    description: 需要解散的群组 ID
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+example: true

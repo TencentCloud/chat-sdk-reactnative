@@ -1,0 +1,33 @@
+type: api
+group: V2TIMConversationManager
+name: deleteConversation
+features: 删除会话
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 在删除好友或退出群组后，如果不需要查看好友或群会话的历史消息，可以选择删除会话。
+    - 会话删除默认关闭多端同步，可在即时通信 [IM 控制台](https://console.cloud.tencent.com/im-detail/login-message) 开启多端同步。
+    - 删除会话，会同时删除终端和服务器的历史消息，且无法恢复。
+    - 会话内的消息在本地删除的同时，在服务器也会同步删除。
+params:
+  - type: string
+    required: true
+    name: conversationID
+    description: 需要删除的会话id
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+example: true

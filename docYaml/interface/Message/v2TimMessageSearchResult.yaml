@@ -1,0 +1,19 @@
+type: class
+group: Message
+name: V2TimMessageSearchResult
+features: 会话搜索结果
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: totalCount
+    type: number
+    description: 如果您本次搜索【指定会话】，那么返回满足搜索条件的消息总数量； 如果您本次搜索【全部会话】，那么返回满足搜索条件的消息所在的所有会话总数量。
+  - name: messageSearchResultItems
+    type: '[V2TimMessageSearchResultItem]()[]'
+    description: 如果您本次搜索【指定会话】，那么返回结果列表只包含该会话结果； 如果您本次搜索【全部会话】，那么对满足搜索条件的消息根据会话 ID 分组，分页返回分组结果；
+    extra:
+      - 如果您本次搜索【指定会话】，那么 messageList 中装载的是本会话中所有满足搜索条件的消息列表。
+      - 如果您本次搜索【全部会话】，那么 messageList 中装载的消息条数会有如下两种可能：
+      - 如果某个会话中匹配到的消息条数 > 1，则 messageList 为空，您可以在 UI 上显示“ messageCount 条相关记录”。
+      - 如果某个会话中匹配到的消息条数 = 1，则 messageList 为匹配到的那条消息，您可以在 UI 上显示之，并高亮匹配关键词。

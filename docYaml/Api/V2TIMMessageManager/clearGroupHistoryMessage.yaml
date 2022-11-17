@@ -1,0 +1,31 @@
+type: api
+group: messageManager
+name: clearGroupHistoryMessage
+features: 清空群聊本地及云端的消息（不删除会话）
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 会话内的消息在本地删除的同时，在服务器也会同步删除。
+    - 如果不想清空云端消息，请不要使用本接口。
+params:
+  - type: string
+    required: true
+    name: groupID
+    description: 需要删除的群组id
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+example: true

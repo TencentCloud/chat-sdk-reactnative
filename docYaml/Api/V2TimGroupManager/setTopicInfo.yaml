@@ -1,0 +1,34 @@
+type: api
+group: V2TIMGroupManager
+name: setTopicInfo 
+features: 设置话题属性
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 社群（Community）功能需 [购买旗舰版套餐包](https://buy.cloud.tencent.com/avc?from=17182) 并在 [控制台](https://console.cloud.tencent.com/im) >功能配置>群组配置>群功能配置>社群中开通。
+params:
+  - type: '[V2TimTopicInfo]()'
+    required: true
+    name: topicInfo
+    description: 需要修改的话题的设置
+  - type: string
+    required: true
+    name: groupID
+    description: 话题所在的群组id
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+example: true

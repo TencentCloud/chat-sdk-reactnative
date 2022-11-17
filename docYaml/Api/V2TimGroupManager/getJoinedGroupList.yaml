@@ -1,0 +1,32 @@
+type: api
+group: V2TIMGroupManager
+name: getJoinedGroupList 
+features: 获取当前用户已经加入的群组
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 直播群（AVChatRoom）和 社群（Community，支持话题的社群）不包含在此列表中。
+    - 该接口有频限检测，SDK 限制调用频率为1 秒 10 次，超过限制后会报 ERR_SDK_COMM_API_CALL_FREQUENCY_LIMIT （7008）错误
+    - 若查询的群组为工作群(Work)，需要此群先存在发送的消息将群激活才能查询到。
+params:
+returnExample: |-
+    V2TimValueCallback<V2TimGroupInfo[]>
+
+    {
+        code : number
+        desc : string
+        data : V2TimGroupInfo[]
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+    - type: '[V2TimGroupInfo]()[]'
+      name: data
+      description: 查询到的群组列表
+example: true

@@ -1,0 +1,42 @@
+type: api
+group: V2TIMManager
+name: joinGroup
+features: 加入群组
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 工作群（Work）：不能主动入群，只能通过群成员调用 V2TIMManager.getGroupManager().inviteUserToGroup()接口邀请入群。
+    - 公开群（Public）：申请入群后，根据群组的groupAddOpt确定是否需要审批。如果需要，管理员在收到 V2TIMGroupListener 的 onReceiveJoinApplication 回调后调用 getGroupApplicationList 接口处理加群请求。
+    - 其他群：可以直接入群。
+    - '[加群流程详解](https://cloud.tencent.com/document/product/269/77563#.E5.8A.A0.E5.85.A5.E7.BE.A4.E7.BB.84)'
+    -
+    - 当在web端时，加入直播群时groupType字段必填
+    -
+    - 好友工作群（Work）、陌生人社交群（Public）默认不打开拉取入群前消息记录。如需开启此功能，您可以登录 即时通信 IM 控制台 修改相关配置，配置页面路径为：
+    - '![](https://qcloudimg.tencent-cloud.cn/raw/9ec039a6b649ef0f2a1b5d630b97716d.png)'
+params:
+  - type: string
+    required: true
+    name: groupID
+    description: 需要加入群组 ID
+  - type: string
+    required: true
+    name: message
+    description: 加群申请信息
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+example: true

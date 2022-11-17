@@ -1,0 +1,18 @@
+type: api
+group: V2TIMManager
+name: getOfflinePushManager 
+features: 离线推送功能入
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 离线推送功能方法在核心类 TencentImSDKPlugin.v2TIMManager.getOfflinePushManager()中。
+params:
+returnExample: |-
+    V2TIMOfflinePushManager
+returnValues:
+    - type: V2TIMOfflinePushManager
+      name: V2TIMOfflinePushManager
+      description: 离线推送功能入口
+example: true

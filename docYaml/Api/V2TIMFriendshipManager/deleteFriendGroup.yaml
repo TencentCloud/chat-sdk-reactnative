@@ -1,0 +1,27 @@
+type: api
+group: V2TIMFriendshipManager
+name: deleteFriendGroup
+features: 删除好友分组
+version: 1.1.1
+ignore: false
+deprecated:
+params:
+  - type: string[]
+    required: false
+    name: groupNameList
+    description: 需要删除的群组名称
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+example: true

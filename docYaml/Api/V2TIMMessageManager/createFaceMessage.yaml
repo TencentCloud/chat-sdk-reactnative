@@ -1,0 +1,42 @@
+type: api
+group: messageManager
+name: createFaceMessage
+features: 创建表情消息
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 表情消息会直接发送表情编码，通常接收端需要将其转换成对应的表情 icon。
+    - SDK 并不提供表情包，如果开发者有表情包，可使用 index 存储表情在表情包中的索引，或者使用 data 存储表情映射的字符串 key，这些都由用户自定义，SDK 内部只做透传。
+params:
+  - type: number
+    required: true
+    name: index
+    description: 表情索引
+  - type: string
+    required: true
+    name: data
+    description: 自定义数据
+returnExample: |-
+    V2TimValueCallback<V2TimMsgCreateInfoResult>
+            
+    {
+        code: number,
+        desc: string,
+        data: {
+            id: string,
+            messageInfo: V2TimMessage,
+        }
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+    - type: '[V2TimMsgCreateInfoResult]()'
+      name: data
+      description: 创建后的表情信息
+example: true

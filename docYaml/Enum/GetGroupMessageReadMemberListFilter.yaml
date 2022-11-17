@@ -1,0 +1,9 @@
+type: enum
+name: GetGroupMessageReadMemberListFilter
+features: 获取群消息已读（未读）成员列表type
+ignore: false
+attributes:
+  - name: V2TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_READ
+    description: 已读成员
+  - name: V2TIM_GROUP_MESSAGE_READ_MEMBERS_FILTER_UNREAD
+    description: 未读成员

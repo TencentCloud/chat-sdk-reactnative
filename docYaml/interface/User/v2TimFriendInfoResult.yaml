@@ -1,0 +1,25 @@
+type: class
+group: User
+name: V2TimFriendInfoResult
+features: 好友资料获取结果
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: resultCode
+    type: number
+    description: 返回码
+  - name: resultInfo
+    type: string
+    description: 返回结果表述
+  - name: relation
+    type: number
+    description: 好友类型
+    extra:
+      - 0:不是好友
+      - 1:对方在我的好友列表中
+      - 2:我在对方的好友列表中
+      - 3:互为好友
+  - name: friendInfo
+    type: '[V2TimFriendInfo]()'
+    description: 好友个人资料，如果不是好友，除了 userID 字段，其他字段都为空   

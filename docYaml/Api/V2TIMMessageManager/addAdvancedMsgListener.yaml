@@ -1,0 +1,26 @@
+type: api
+group: V2TIMMessageManager
+name: addAdvancedMsgListener 
+features: 添加高级消息的事件监听器
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 通过 addAdvancedMsgListener 监听接收所有类型消息（文本、自定义、富媒体消息），相关回调在 V2TimAdvancedMsgListener 中定义。
+    - 使用addAdvancedMsgListener会在所有的高级消息监听器列表中新增一个高级消息监听器。
+    - 接收方调用 addAdvancedMsgListener 添加高级消息监听器。一般建议在比较靠前的时间点调用，例如例如聊天消息界面初始化后，确保 App 能及时收到消息。
+    -
+    - '[接收文本消息](https://cloud.tencent.com/document/product/269/77541#.E6.8E.A5.E6.94.B6.E6.96.87.E6.9C.AC.E6.B6.88.E6.81.AF)'
+    - '[接收自定义消息](https://cloud.tencent.com/document/product/269/77541#.E6.8E.A5.E6.94.B6.E8.87.AA.E5.AE.9A.E4.B9.89.E6.B6.88.E6.81.AF)'
+    - '[接收富媒体消息](https://cloud.tencent.com/document/product/269/77541#.E6.8E.A5.E6.94.B6.E5.AF.8C.E5.AA.92.E4.BD.93.E6.B6.88.E6.81.AF)'
+    - '[接收多个 Elem 的消息](https://cloud.tencent.com/document/product/269/77541#.E6.8E.A5.E6.94.B6.E5.A4.9A.E4.B8.AA-elem-.E7.9A.84.E6.B6.88.E6.81.AF)'
+params:
+  - type: '[V2TimAdvancedMsgListener]()'
+    required: true
+    name: listener
+    description: 高级消息监听器
+returnExample: |-
+    void
+returnValues:
+example: true

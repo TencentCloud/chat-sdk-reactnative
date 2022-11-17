@@ -1,0 +1,35 @@
+type: api
+group: messageManager
+name: deleteMessages
+features: 删除本地及漫游消息
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 该接口会在删除本地消息的基础上，同步删除云端存储的消息，且无法恢复。
+    - 每次调用，最多只能删除 30 条消息。
+    - 每次调用，待删除的消息必须属于同一会话。
+    - 1 秒钟最多只能调用 1 次该接口。
+    - 如果一个账号在某设备上拉取过这些消息，那么调用该接口删除云端消息后，这些消息仍然会保存在该设备上，即删除消息不支持多端同步。
+    - 如果删除的是最后一条消息，会话的 lastMessage 会变为前一条消息。
+params:
+  - type: string[]
+    required: true
+    name: msgIDs
+    description: 需要删除的消息id列表
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+example: true

@@ -1,0 +1,20 @@
+type: callback
+group: 
+name: OnGroupDismissed
+features: 群被解散了（全员能收到）
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnGroupDismissed = void Function(
+  string groupID,
+  V2TimGroupMemberInfo opUser
+  )
+returnValues:
+  - type: string
+    name: groupID
+    description: 群 ID
+  - type: '[V2TimGroupMemberInfo]()'
+    name: opUser
+    description: 处理人
+example: true

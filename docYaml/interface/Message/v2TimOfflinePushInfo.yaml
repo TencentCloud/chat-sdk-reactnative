@@ -1,0 +1,39 @@
+type: class
+group: Message
+name: OfflinePushInfo
+features: 消息的离线推送信息
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: title
+    type: string
+    description: 离线推送展示的标题。
+  - name: desc
+    type: string
+    description: 离线推送展示的内容。 自定义消息进行离线推送，必须设置此字段内容。
+  - name: disablePush
+    type: boolean
+    description: 是否关闭推送（默认开启推送）。
+  - name: ext
+    type: string
+    description: 离线推送扩展字段
+  - name: iOSSound
+    type: string
+    description: 离线推送声音设置（仅对 iOS 生效）
+    extra:
+      - 当 iOSSound = kIOSOfflinePushNoSound，表示接收时不会播放声音。
+      - 当 iOSSound = kIOSOfflinePushDefaultSound，表示接收时播放系统声音。
+      - 如果要自定义 iOSSound，需要先把语音文件链接进 Xcode 工程，然后把语音文件名（带后缀）设置给 iOSSound。
+  - name: ignoreIOSBadge
+    type: boolean
+    description: 离线推送忽略 badge 计数（仅对 iOS 生效）， 如果设置为 YES，在 iOS 接收端，这条消息不会使 APP 的应用图标未读计数增加。
+  - name: androidOPPOChannelID
+    type: string
+    description: 离线推送设置 OPPO 手机推送的 ChannelID, 仅支持 8.0 系统及以上。（应用配置接入 OPPO 推送的必须要设置）
+  - name: androidVIVOClassification
+    type: string
+    description: 离线推送设置 VIVO 手机推送的 ChannelID（应用配置接入 VIVO 推送的必须要设置）
+  - name: androidSound
+    type: string
+    description: 离线推送声音设置（仅对 安卓 生效）

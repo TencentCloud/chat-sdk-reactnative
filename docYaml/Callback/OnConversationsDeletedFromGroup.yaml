@@ -1,0 +1,20 @@
+type: callback
+group: 
+name: OnConversationsDeletedFromGroup  
+features: 会话分组删除会话
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnConversationsDeletedFromGroup = void Function(
+      String groupName, List<V2TimConversation> conversationList);
+  )
+returnValues:
+  - type: String
+    name: groupName
+    description: 被删除的会话的分组名
+  - type: List< [V2TimConversation]() >
+    name: conversationList
+    description: 删除的会话列表
+example: true
+ 

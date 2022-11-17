@@ -1,0 +1,16 @@
+type: callback
+group: 
+name: OnBlackListAddCallback
+features: 黑名单列表新增用户的回调
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnBlackListAddCallback = void Function(
+  V2TimFriendInfo[] users
+  )
+returnValues:
+  - type: '[V2TimFriendInfo]()[]'
+    name: users
+    description: 新增的用户信息列表
+example: true

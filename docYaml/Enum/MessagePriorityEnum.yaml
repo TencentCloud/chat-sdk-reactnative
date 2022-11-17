@@ -1,0 +1,13 @@
+type: enum
+name: MessagePriorityEnum
+features: 消息优先级
+ignore: false
+attributes:
+  - name: V2TIM_PRIORITY_DEFAULT
+    description: 默认为普通优先级
+  - name: V2TIM_PRIORITY_HIGH
+    description: 高优先级，一般用于礼物等重要消息
+  - name: V2TIM_PRIORITY_NORMAL
+    description: 普通优先级，一般用于普通消息
+  - name: V2TIM_PRIORITY_LOW
+    description: 低优先级，一般用于点赞消息

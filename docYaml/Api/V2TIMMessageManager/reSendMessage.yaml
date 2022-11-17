@@ -1,0 +1,78 @@
+type: api
+group: messageManager
+name: reSendMessage
+features: 消息重发
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 当环境网络环境较差或文件上传失败等原因会导致信息发送失败，此时需要调用消息重发的API。
+    - 具体消息发送失败的原因可见sendMessage返回的错误码。
+    - 当使用reSendMessage时，需要将原来发送的消息删除。
+params:
+  - type: string
+    required: true
+    name: msgID
+    description: 需要重发的消息id
+  - type: boolean
+    required: false
+    name: onlineUserOnly
+    description: 是否是发送给在线用户
+returnExample: |-
+    V2TimValueCallback<V2TimMessage>
+
+    {
+        code : number
+        desc : string
+        data : {
+          msgID: string
+          timestamp: number
+          progress: number
+          sender: string
+          nickName: string
+          friendRemark: string
+          faceUrl: string
+          nameCard: string
+          groupID: string
+          userID: string
+          status: number
+          elemType: number
+          textElem: V2TimTextElem
+          customElem: V2TimCustomElem
+          imageElem: V2TimImageElem
+          soundElem: V2TimSoundElem
+          videoElem: V2TimVideoElem
+          fileElem: V2TimFileElem
+          locationElem: V2TimLocationElem
+          faceElem: V2TimFaceElem
+          groupTipsElem: V2TimGroupTipsElem
+          mergerElem: V2TimMergerElem
+          localCustomData: string
+          localCustomInt: number
+          cloudCustomData: string
+          isSelf: boolean
+          isRead: boolean
+          isPeerRead: boolean
+          priority: number
+          offlinePushInfo: V2TimOfflinePushInfo
+          groupAtUserList: string[]
+          seq: string
+          random: number
+          isExcludedFromUnreadCount: boolean
+          isExcludedFromLastMessage: boolean
+          id: string
+          needReadReceipt: boolean
+        }
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+    - type: '[V2TimMessage]()'
+      name: data
+      description: 重发后的消息
+example: true

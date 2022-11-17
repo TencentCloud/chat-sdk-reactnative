@@ -1,0 +1,20 @@
+type: callback
+group: 
+name: OnGroupAttributeChanged
+features: 收到群属性更新的回调
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnGroupAttributeChanged = void Function(
+  string groupID,
+  StringMap groupAttributeMap
+  )
+returnValues:
+  - type: string
+    name: groupID
+    description: 群 ID
+  - type: '[StringMap]()'
+    name: groupAttributeMap
+    description: 群的所有属性
+example: true

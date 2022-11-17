@@ -1,0 +1,42 @@
+type: api
+group: messageManager
+name: createFileMessage
+features: 创建文件消息
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 对于移动端，创建文件消息需要先获取到本地文件路径。[参考代码](https://cloud.tencent.com/document/product/269/77539#.E6.96.87.E4.BB.B6.E6.B6.88.E6.81.AF)。
+    - 发送消息过程中，会先将文件上传至服务器，同时回调上传进度。上传成功后再发送消息。
+params:
+  - type: string
+    required: true
+    name: filePath
+    description: 文件路径
+  - type: string
+    required: true
+    name: fileName
+    description: 文件名
+returnExample: |-
+    V2TimValueCallback<V2TimMsgCreateInfoResult>
+            
+    {
+        code: number,
+        desc: string,
+        data: {
+            id: string,
+            messageInfo: V2TimMessage,
+        }
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+    - type: '[V2TimMsgCreateInfoResult]()'
+      name: data
+      description: 创建后的文件信息
+example: true

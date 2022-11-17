@@ -1,0 +1,17 @@
+type: class
+group: User
+name: V2TimFriendGroup
+features: 用户好友分组信息
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: name
+    type: string
+    description: 好友分组名称
+  - name: friendCount
+    type: number
+    description: 分组成员数量
+  - name: friendIDList
+    type: string[]
+    description: 分组成员列表

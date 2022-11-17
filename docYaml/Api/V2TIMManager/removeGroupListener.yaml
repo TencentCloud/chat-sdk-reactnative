@@ -1,0 +1,19 @@
+type: api
+group: V2TIMManager
+name: removeGroupListener
+features: 移除群组监听器
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 若listener为null则删除所有群组监听器
+params:
+  - type: '[V2TimGroupListener]()'
+    required: true
+    name: listener
+    description: 需要移除的群组监听器
+returnExample: |-
+    void
+returnValues:
+example: true

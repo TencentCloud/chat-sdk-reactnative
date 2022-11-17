@@ -1,0 +1,19 @@
+type: api
+group: V2TIMConversationManager
+name: removeConversationListener
+features: 移除会话监听器
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 1. 若listener为null则删除所有的关系链监听器
+params:
+  - type: '[V2TimConversationListener]()'
+    required: false
+    name: listener
+    description: 需要移除的会话监听器
+returnExample: |-
+    void
+returnValues:
+example: true

@@ -1,0 +1,19 @@
+type: callback
+group: 
+name: OnConversationGroupNameChanged  
+features: 会话分组名变更
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnConversationGroupNameChanged = void Function(
+      String oldName, String newName);
+  )
+returnValues:
+  - type: String
+    name: oldName
+    description: 被修改的会话分组名
+  - type: String
+    name: newName
+    description: 新的会话分组名
+example: true

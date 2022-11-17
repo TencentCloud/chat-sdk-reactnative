@@ -1,0 +1,17 @@
+type: class
+group: Message
+name: V2TimMessageChangeInfo
+features: 消息修改信息
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: code
+    type: number
+    description: 修改结果码
+  - name: desc
+    type: string
+    description: 描述信息
+  - name: message
+    type: '[V2TimMessage]()'
+    description: 修改后的信息

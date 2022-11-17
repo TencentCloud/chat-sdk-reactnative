@@ -1,0 +1,14 @@
+type: class
+group: Message
+name: V2TimMsgCreateInfoResult
+features: 创建信息结果
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: id
+    type: string
+    description: 创建信息的 ID
+  - name: messageInfo
+    type: '[V2TimMessage]()'
+    description: 创建信息的内容

@@ -1,0 +1,34 @@
+type: api
+group: V2TIMGroupManager
+name: getGroupsInfo 
+features: 获取群资料
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 该接口支持一次传入多个 groupID，批量获取多个群的群资料。
+params:
+  - type: string[]
+    required: true
+    name: groupIDList
+    description: 需要查询的群组 ID列表
+returnExample: |-
+    V2TimValueCallback<V2TimGroupInfoResult[]>
+
+    {
+        code : number
+        desc : string
+        data : V2TimGroupInfoResult[]
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+    - type: '[V2TimGroupInfoResult]()[]'
+      name: data
+      description: 查询到的群组信息列表
+example: true

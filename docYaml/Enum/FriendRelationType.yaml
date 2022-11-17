@@ -1,0 +1,13 @@
+type: enum
+name: FriendRelationType
+features: 好友关系类型
+ignore: false
+attributes:
+  - name: V2TIM_FRIEND_RELATION_TYPE_NONE
+    description: 不是好友
+  - name: V2TIM_FRIEND_RELATION_TYPE_IN_MY_FRIEND_LIST
+    description: 对方在我的好友列表中
+  - name: V2TIM_FRIEND_RELATION_TYPE_IN_OTHER_FRIEND_LIST
+    description: 我在对方的好友列表中
+  - name: V2TIM_FRIEND_RELATION_TYPE_BOTH_WAY
+    description: 互为好友

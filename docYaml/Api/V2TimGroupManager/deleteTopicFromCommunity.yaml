@@ -1,0 +1,38 @@
+type: api
+group: V2TIMGroupManager
+name: deleteTopicFromCommunity 
+features: 删除话题
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 社群（Community）功能需 [购买旗舰版套餐包](https://buy.cloud.tencent.com/avc?from=17182) 并在 [控制台](https://console.cloud.tencent.com/im) >功能配置>群组配置>群功能配置>社群中开通。
+params:
+  - type: string
+    required: true
+    name: groupID
+    description: 需要删除话题的群组id
+  - type: string[]
+    required: true
+    name: topicIDList
+    description: 删除的话题id列表 
+returnExample: |-
+    V2TimValueCallback<V2TIMTopicOperationResult[]>
+
+    {
+        code : number
+        desc : string
+        data : V2TIMTopicOperationResult[]// 话题删除处理结果
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+    - type: '[V2TIMTopicOperationResult]()[]'
+      name: data
+      description: 话题删除处理结果
+example: true

@@ -1,0 +1,43 @@
+type: api
+group: V2TIMGroupManager
+name: setGroupMemberInfo 
+features: 修改指定的群成员资料
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 群主或管理员可以调用 setGroupMemberInfo 接口修改群成员的群名片（nameCard）、自定义字段（customInfo）。
+params:
+  - type: string
+    required: true
+    name: groupID
+    description: 需要修改的群组id
+  - type: string
+    required: true
+    name: userID
+    description: 需要修改的用户id
+  - type: string
+    required: false
+    name: nameCard
+    description: 修改名片属性
+  - type: '[StringMap]()'
+    required: false
+    name: groupID
+    description: 修改自定义属性
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+example: true
+  

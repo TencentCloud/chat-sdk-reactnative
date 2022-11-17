@@ -1,0 +1,20 @@
+type: callback
+group: 
+name: OnConversationGroupCreated
+features: 会话分组被创建
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnConversationGroupCreated = void Function(
+    groupName: string, conversationList: V2TimConversation[]);
+  )
+returnValues:
+  - type: String
+    name: groupName
+    description: 创建的会话分组名
+  - type: List< [V2TimConversation]() >
+    name: conversationList
+    description: 创建的会话分组中的初始化会话列表
+example: true
+ 

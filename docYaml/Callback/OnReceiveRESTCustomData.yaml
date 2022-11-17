@@ -1,0 +1,20 @@
+type: callback
+group: 
+name: OnReceiveRESTCustomData
+features: 客户端收到，[通过服务端API向群组中，发送的系统通知](https://cloud.tencent.com/document/product/269/1630)，的回调。
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnReceiveRESTCustomData = void Function(
+  string groupID,
+  string customData
+  )
+returnValues:
+  - type: string
+    name: groupID
+    description: 群 ID
+  - type: string
+    name: customData
+    description: 自定义数据
+example: true

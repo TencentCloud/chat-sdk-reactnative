@@ -1,0 +1,16 @@
+type: callback
+group: 
+name: OnGroupCreated
+features: 创建群（主要用于多端同步）
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnGroupCreated = void Function(
+  string groupID
+  )
+returnValues:
+  - type: string
+    name: groupID
+    description: 群 ID
+example: true

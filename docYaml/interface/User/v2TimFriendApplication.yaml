@@ -1,0 +1,33 @@
+type: class
+group: User
+name: V2TimFriendApplication
+features: 好友申请信息
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: userID
+    type: string
+    description: 用户 ID
+  - name: nickName
+    type: string
+    description: 用户昵称
+  - name: faceUrl
+    type: string
+    description: 用户头像
+  - name: addTime
+    type: number
+    description: 添加时间
+  - name: addSource
+    type: string
+    description: 来源
+  - name: addWording
+    type: string
+    description: 加好友附言
+  - name: type
+    type: number
+    description: 好友申请类型
+    extra:
+      - 0:别人发给我的
+      - 1:我发给别人的
+      - 2:别人发给我的 和 我发给别人的。仅拉取时有效

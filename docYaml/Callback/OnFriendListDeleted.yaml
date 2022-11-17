@@ -1,0 +1,16 @@
+type: callback
+group: 
+name: OnFriendListDeleted
+features: 好友列表减少人员的回调
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnFriendListDeleted = void Function(
+  string[] userList
+  )
+returnValues:
+  - type: string[]
+    name: userList
+    description: 减少的好友id列表
+example: true

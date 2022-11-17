@@ -1,0 +1,49 @@
+type: api
+group: messageManager
+name: createTargetedGroupMessage
+features: 创建一条定向群消息
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 定向消息是指，向群内部分指定的成员发送消息，而未被指定的群成员无法收到该消息。可以按照下面的方式实现：
+    - 调用 createXXXMessage (其中 XXX 表示具体的消息类型) 接口创建一条原始消息对象 V2TIMMessage。
+    - 调用 createTargetedGroupMessage 接口根据原始消息对象创建定向消息对象 V2TimMessage，并指定消息接收成员列表。
+    - 调用 sendMessage 接口发送定向消息。
+    - 
+    - 该功能需要购买旗舰版套餐包。
+    - 创建定向群消息的原始消息对象不支持群 @ 消息。
+    - 社群（Community）和直播群（AVChatRoom）不支持发送定向群消息。
+    - 定向群消息默认不计入群会话的未读计数。
+params:
+  - type: string
+    required: true
+    name: id
+    description: 创建的消息的id
+  - type: string[]
+    required: true
+    name: receiverList
+    description: 群内部分成员id列表
+returnExample: |-
+    V2TimValueCallback<V2TimMsgCreateInfoResult>
+            
+    {
+        code: number,
+        desc: string,
+        data: {
+            id: string,
+            messageInfo: V2TimMessage,
+        }
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+    - type: '[V2TimMsgCreateInfoResult]()'
+      name: data
+      description: 创建的定向群消息
+example: true

@@ -1,0 +1,31 @@
+type: api
+group: messageManager
+name: markGroupMessageAsRead
+features: 设置群组消息已读
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 对端会收到 onRecvC2CReadReceipt 回调，回调里面会携带清空会话未读数的时间戳。
+    - 该接口调用成功后，自己的未读数会清 0。
+params:
+  - type: string
+    required: true
+    name: groupID
+    description: 需要设置消息已读的群组id
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+example: true

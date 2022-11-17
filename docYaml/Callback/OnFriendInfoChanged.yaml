@@ -1,0 +1,16 @@
+type: callback
+group: 
+name: OnFriendInfoChanged
+features: 好友信息改变的回调
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnFriendInfoChanged = void Function(
+  V2TimFriendInfo[] users
+  )
+returnValues:
+  - type: '[V2TimFriendInfo]()[]'
+    name: users
+    description: 好友信息改变的好友列表
+example: true

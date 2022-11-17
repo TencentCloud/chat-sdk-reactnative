@@ -1,0 +1,43 @@
+type: api
+group: V2TIMManager
+name: getUsersInfo 
+features: 获取用户资料
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 获取自己的资料，传入自己的 ID 即可。
+    - userIDList 建议一次最大 100 个，因为数量过多可能会导致数据包太大被后台拒绝，后台限制数据包最大为 1M。
+    -
+    - 您可以调用 getUsersInfo 接口查询非好友资料，其中参数 userIDList 填入非好友的 UserID 即可。
+    - 不能修改非好友的资料。
+    -
+    - 获取用户资料为什么不是最新的？
+    - SDK 中用户资料的更新分好友和陌生人两种情况：
+    - 好友资料：由于好友资料更新时，后台会主动向 SDK 发送系统通知，因此好友资料可以实时更新。
+    - 陌生人资料：陌生人资料更新时，由于没有好友关系，后台无法向 SDK 发送系统通知，因此无法实时更新；为了避免每次获取用户资料都向后台发起网络请求，SDK 增加了缓存逻辑，对同一个用户主动向后台拉取资料的时间间隔为 10 分钟。
+params:
+  - type: string[]
+    required: true
+    name: userIDList
+    description: 需要查询的用户id列表
+returnExample: |-
+    V2TimValueCallback<V2TimUserFullInfo[]>
+
+    {
+        code : number
+        desc : string
+        data : V2TimUserFullInfo[]//查询到的用户资料列表
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+    - type: '[V2TimUserFullInfo]()[]'
+      name: data
+      description: 查询到的用户资料列表
+example: true

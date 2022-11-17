@@ -1,0 +1,79 @@
+type: class
+group: Group
+name: V2TimGroupInfo
+features: 群资料
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: groupID
+    type: string
+    description: 群组 ID
+    extra:
+      - 自定义群组 ID 必须为可打印 ASCII 字符（0x20-0x7e），最长48个字节，且前缀不能为 @TGS（避免与默认分配的群组 ID 混淆）
+  - name: groupType
+    type: string
+    description: '[群类型](https://cloud.tencent.com/document/product/269/1502#.E7.BE.A4.E7.BB.84.E7.B1.BB.E5.9E.8B.E4.BB.8B.E7.BB.8D)'
+  - name: groupName
+    type: string
+    description: 群名称
+  - name: notification
+    type: string
+    description: 群公告
+    extra:
+      - 群公告最长300字节
+  - name: introduction
+    type: string
+    description: 群简介
+    extra:
+      - 群简介最长240字节
+  - name: faceUrl
+    type: string
+    description: 群头像
+    extra:
+      - 群头像 URL 最长100字节
+  - name: isAllMuted
+    type: boolean
+    description: 是否全员禁言
+  - name: isSupportTopic
+    type: boolean
+    description: 社群是否支持创建话题
+    extra:
+      - 只在群类型为 Community 时有效
+  - name: owner
+    type: string
+    description: 群主
+  - name: createTime
+    type: number
+    description: 群创建时间
+  - name: groupAddOpt
+    type: number
+    description: 加群是否需要管理员审批，工作群（Work）不能主动加入，不支持此设置项
+  - name: lastInfoTime
+    type: number
+    description: 群最近一次群资料修改时间
+  - name: lastMessageTime
+    type: number
+    description: 群最近一次发消息时间
+  - name: memberCount
+    type: number
+    description: 已加入的群成员数量
+  - name: onlineCount
+    type: number
+    description: 在线的群成员数量
+  - name: role
+    type: number
+    description: 当前用户在此群组中的角色，切换角色请调用 [setGroupMemberRole]() 接口
+  - name: recvOpt
+    type: number
+    description: 当前用户在此群组中的消息接收选项,修改群消息接收选项请调用 [setGroupReceiveMessageOpt]() 接口
+  - name: joinTime
+    type: number
+    description: 当前用户在此群中的加入时间，不支持设置，系统自动生成
+  - name: customInfo
+    type: '[StringMap]()'
+    description: 设置群自定义字段
+    extra:
+      - 需要两个步骤：
+      - 1.在 控制台 (功能配置 -> 群自定义字段) 配置群自定义字段的 key 值，Key 为 string 类型，长度不超过 16 字节。
+      - 2.调用 setGroupInfo 接口设置该字段，长度不超过 512 字节。

@@ -1,0 +1,41 @@
+type: class
+group: Message
+name: V2TimSignalingInfo
+features: 信令消息属性
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: inviteID
+    type: string
+    description: 邀请用户 ID
+  - name: inviter
+    type: string
+    description: 邀请人 ID
+  - name: inviteeList
+    type: '[]'
+    description: 邀请列表
+  - name: groupID
+    type: string
+    description: 邀请群组 ID
+  - name: data
+    type: string
+    description: 邀请信息
+  - name: timeout
+    type: number
+    description: 邀请超时时间
+  - name: actionType
+    type: number
+    description: 邀请状态类型
+    extra:
+      - 1:邀请方发起邀请
+      - 2:邀请方取消邀请
+      - 3:被邀请方接受邀请
+      - 4:被邀请方拒绝邀请
+      - 5:邀请超时
+  - name: isOnlineUserOnly
+    type: boolean
+    description: 是否只邀请在线用户，ios不回返回这条
+  - name: offlinePushInfo
+    type: '[V2TimOfflinePushInfo]()'
+    description: 离线推送信息，ios不回返回这条

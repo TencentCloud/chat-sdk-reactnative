@@ -1,0 +1,45 @@
+type: api
+group: messageManager
+name: modifyMessage
+features: 消息编辑
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 会话里面已经发送成功的消息，会话内任意成员可以针对消息做二次修改。消息修改成功后会通过OnRecvMessageModified同步给会话的全部成员。
+    - 修改消息时，IM SDK 仅限制了会话参与者才能修改，如果您需要更多限制，比如限制只有消息发送者才能修改，可以自行在业务层处理。
+    - 目前消息支持修改的信息如下：
+    - localCustomData
+    - localCustomInt
+    - cloudCustomData
+    - V2TIMTextElem 
+    - V2TIMCustomElem
+params:
+  - type: '[V2TimMessage]()'
+    required: true
+    name: message
+    description: 需要二次编辑的消息
+returnExample: |-
+    V2TimValueCallback<V2TimMessageChangeInfo>
+
+    {
+        code : number
+        desc : string
+        data : {
+          code : number
+          desc : string
+          message : V2TimMessage
+        }
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+    - type: '[V2TimMessageChangeInfo]()'
+      name: data
+      description: 编辑后的信息
+example: true

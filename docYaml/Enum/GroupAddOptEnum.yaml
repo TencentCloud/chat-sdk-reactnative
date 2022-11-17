@@ -1,0 +1,11 @@
+type: enum
+name: GroupAddOptEnum
+features: 群加群方式
+ignore: false
+attributes:
+  - name: V2TIM_GROUP_ADD_FORBID
+    description: 禁止加群
+  - name: V2TIM_GROUP_ADD_AUTH
+    description: 需要管理员审批
+  - name: V2TIM_GROUP_ADD_ANY
+    description: 任何人可以加入

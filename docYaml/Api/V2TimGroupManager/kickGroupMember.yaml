@@ -1,0 +1,38 @@
+type: api
+group: V2TIMGroupManager
+name: kickGroupMember 
+features: 踢人
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 普通群成员被踢后，全员（包括被踢人）会收到 OnMemberKickedCallback 回调。
+    - 由于直播群（AVChatRoom）对进群没有限制，因此直播群（AVChatRoom）没有支持踢人的接口，您可以使用 [muteGroupMember]() 禁言指定成员达到类似的成员管控的目的。
+    - 工作群（Work）：只有群主或 APP 管理员可以踢人。
+    - 公开群（Public）、会议群（Meeting）：群主、管理员和 APP 管理员可以踢人 。
+    - 直播群（AVChatRoom）：只支持禁言（muteGroupMember），不支持踢人。
+params:
+  - type: string
+    required: true
+    name: groupID
+    description: 需要踢人的群组id
+  - type: string[]
+    required: true
+    name: memberList
+    description: 踢出的用户id列表
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述符
+example: true

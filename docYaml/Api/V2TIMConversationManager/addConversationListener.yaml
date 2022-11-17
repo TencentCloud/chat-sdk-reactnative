@@ -1,0 +1,20 @@
+type: api
+group: V2TIMConversationManager
+name: addConversationListener
+features: 添加会话监听器
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 1. 添加监听器后，您才能接收到会话变更事件。
+    - 2. 使用addConversationListener会在所有的会话监听器列表中新增一个会话监听器。
+params:
+  - type: '[V2TimConversationListener]()'
+    required: true
+    name: listener
+    description: 需要新增的会话监听器
+returnExample: |-
+    void
+returnValues:
+example: true

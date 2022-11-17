@@ -1,0 +1,26 @@
+type: api
+group: messageManager
+name: markAllMessageAsRead
+features: 标记所有消息为已读
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 对端会收到 onRecvC2CReadReceipt 回调，回调里面会携带清空会话未读数的时间戳。
+params:
+returnExample: |-
+    V2TimCallback
+
+    {
+        code : number
+        desc : string
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+example: true

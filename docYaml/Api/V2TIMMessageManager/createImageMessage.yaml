@@ -1,0 +1,40 @@
+type: api
+group: messageManager
+name: createImageMessage
+features: 创建图片消息
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 图片文件最大支持 28 MB
+    - 创建图片消息需要先获取到本地文件路径。[参考代码](https://cloud.tencent.com/document/product/269/77539#.E5.9B.BE.E7.89.87.E6.B6.88.E6.81.AF)。
+    - 创建图片路径不能使用网络Url。
+    - 发送消息过程中，会先将图片文件上传至服务器，同时回调上传进度。上传成功后再发送消息。
+params:
+  - type: string
+    required: true
+    name: imagePath
+    description: 图片本地路径
+returnExample: |-
+    V2TimValueCallback<V2TimMsgCreateInfoResult>
+            
+    {
+        code: number,
+        desc: string,
+        data: {
+            id: string,
+            messageInfo: V2TimMessage,
+        }
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+    - type: '[V2TimMsgCreateInfoResult]()'
+      name: data
+      description: 创建后的图片信息
+example: true

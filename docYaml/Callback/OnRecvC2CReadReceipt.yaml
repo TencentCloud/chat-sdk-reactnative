@@ -1,0 +1,19 @@
+type: callback
+group: 
+name: OnRecvC2CReadReceipt
+features: C2C 对端用户会话已读通知
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 如果对端用户调用 [markC2CMessageAsRead]() 接口，自己会收到该回调
+returnExample: |-
+  OnRecvC2CReadReceipt = void Function(
+  V2TimMessageReceipt[] receiptList
+  )
+returnValues:
+  - type: '[V2TimMessageReceipt]()[]'
+    name: receiptList
+    description: 消息已读列表
+example: true

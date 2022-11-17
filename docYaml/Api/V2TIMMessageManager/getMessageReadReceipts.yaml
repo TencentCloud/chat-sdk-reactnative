@@ -1,0 +1,36 @@
+type: api
+group: messageManager
+name: getMessageReadReceipts
+features: 获取消息已读回执。
+version: 1.1.1
+ignore: false
+deprecated:
+precautions:
+  info:
+    - 该功能需要购买旗舰版套餐包，购买 [旗舰版套餐包](https://buy.cloud.tencent.com/avc?from=17220) 后可使用。
+    - 该接口暂时只支持 Group 消息。 messageIDList 里的消息Id必须在同一个 Group 会话中。
+    - 如果是群消息已读回执，需要先在 [即时通信 IM 控制台](https://console.cloud.tencent.com/im) >功能配置>登录与消息>群已读消息回执配置 中设置支持已读回执消息的群类型。
+params:
+  - type: string[]
+    required: true
+    name: messageIDList
+    description: 需要查询已读回执消息的id列表
+returnExample: |-
+    V2TimValueCallback<V2TimMessageReceipt[]>
+
+    {
+        code : number
+        desc : string
+        data : V2TimMessageReceipt[]
+    }
+returnValues:
+    - type: number
+      name: code
+      description: 请求结果[错误码](https://cloud.tencent.com/document/product/269/1671)
+    - type: string
+      name: desc
+      description: 请求结果描述
+    - type: '[V2TimMessageReceipt]()[]'
+      name: data
+      description: 消息已读回执信息列表
+example: true

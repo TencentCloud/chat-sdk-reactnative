@@ -1,0 +1,17 @@
+type: class
+group: Group
+name: V2TimGroupInfoResult
+features: 获取群组资料结果
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: resultCode
+    type: number
+    description: 结果 0：成功；非0：失败
+  - name: resultMessage
+    type: string
+    description: 如果获取失败，会返回错误信息
+  - name: groupInfo
+    type: '[V2TimGroupInfo]()'
+    description: 如果获取成功，会返回对应的 info

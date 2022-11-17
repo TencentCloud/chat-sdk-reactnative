@@ -1,0 +1,14 @@
+type: class
+group: Message
+name: V2TimImageElem
+features: 图片消息单体属性
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: path
+    type: string
+    description: 此图片的存储路径
+  - name: imageList
+    type: '[V2TimImage]()[]'
+    description: elem包含的不同类型的图片单体属性列表，此列表由此图片上传到服务器产生的此图片的原始图片、小图片、大型图片的单体组成。

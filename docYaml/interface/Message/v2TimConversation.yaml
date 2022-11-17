@@ -1,0 +1,60 @@
+type: class
+group: Message
+name: V2TimConversation
+features: 会话对象属性
+version: 1.1.1
+ignore: false
+deprecated: 
+attributes:
+  - name: conversationID
+    type: string
+    description: 会话唯一 ID，如果是 C2C 单聊，组成方式为 c2c_userID，如果是群聊，组成方式为 group_groupID
+  - name: type
+    type: number
+    description: 会话类型
+    extra:
+      - 1:单聊
+      - 2:群聊
+  - name: userID
+    type: string
+    description: 如果会话类型为 C2C 单聊，userID 会存储对方的用户ID，否则为 null
+  - name: groupID
+    type: string
+    description: 如果会话类型为群聊，groupID 会存储当前群的群 ID，否则为 null 
+  - name: showName
+    type: string
+    description: 会话展示名称（群组：群名称 >> 群 ID；C2C：对方好友备注 >> 对方昵称 >> 对方的 userID）
+  - name: faceUrl
+    type: string
+    description: 会话展示头像（群组：群头像；C2C：对方头像）
+  - name: groupType
+    type: string
+    description: 如果会话类型为群聊，groupType 为当前群类型，否则为 null
+  - name: unreadCount
+    type: number
+    description: 会话未读消息数量,直播群（AVChatRoom）不支持未读计数，默认为 0
+  - name: lastMessage
+    type: '[V2TimMessage]()'
+    description: 会话最后一条消息
+  - name: draftText
+    type: string
+    description: 草稿信息，设置草稿信息请调用 [setConversationDraft]() 接口
+  - name: draftTimestamp
+    type: number
+    description: 草稿编辑时间，草稿设置的时候自动生成
+  - name: isPinned
+    type: boolean
+    description: 是否置顶
+  - name: recvOpt
+    type: number
+    description: 消息接收选项
+    extra:
+      - 0:在线正常接收消息，离线时会进行离线推送
+      - 1:不会接收到消息，离线不会有推送通知
+      - 2:在线正常接收消息，离线不会有推送通知
+  - name: groupAtInfoList
+    type: '[V2TimGroupAtInfo]()[]'
+    description: 群组@信息
+  - name: orderkey
+    type: number
+    description: 排序字段

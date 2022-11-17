@@ -1,0 +1,20 @@
+type: callback
+group: 
+name: OnGroupInfoChanged
+features: 群信息被修改（全员能收到）
+version: 1.1.1
+ignore: false
+deprecated:
+returnExample: |-
+  OnGroupInfoChanged = void Function(
+  string groupID,
+  V2TimGroupChangeInfo[] changeInfos
+  )
+returnValues:
+  - type: string
+    name: groupID
+    description: 群 ID
+  - type: '[V2TimGroupChangeInfo]()[]'
+    name: changeInfos
+    description: 修改的群信息
+example: true
