@@ -7,7 +7,7 @@ import {
     SectionList,
     TouchableOpacity,
     Image,
-    Alert
+    Alert,
 } from 'react-native';
 import ActionButton from 'react-native-action-button-warnings-fixed';
 import storage from '../storage/Storage';
@@ -60,11 +60,11 @@ const DATA = [
             },
             {
                 id: 'sendGroupTextMessage',
-                name: '发送Group文本消息'
+                name: '发送Group文本消息',
             },
             {
                 id: 'sendGroupCustomMessage',
-                name: '发送Group自定义消息'
+                name: '发送Group自定义消息',
             },
             {
                 id: 'getUsersInfo',
@@ -115,67 +115,87 @@ const DATA = [
             },
             {
                 id: 'setGroupInfo',
-                name: '设置群信息'
+                name: '设置群信息',
             },
             {
                 id: 'getGroupOnlineMemberCount',
-                name: '获取群在线人数'
+                name: '获取群在线人数',
             },
             {
                 id: 'getGroupMemberList',
-                name: '获取群成员列表'
+                name: '获取群成员列表',
             },
             {
                 id: 'getGroupMembersInfo',
-                name: '获得群成员信息'
+                name: '获得群成员信息',
             },
             {
                 id: 'setGroupMemberInfo',
-                name: '设置群成员信息'
+                name: '设置群成员信息',
             },
             {
                 id: 'muteGroupMember',
-                name: '禁言群成员'
+                name: '禁言群成员',
             },
             {
                 id: 'inviteUserToGroup',
-                name: '邀请好友进群'
+                name: '邀请好友进群',
             },
             {
                 id: 'kickGroupMember',
-                name: '踢人出群'
+                name: '踢人出群',
             },
             {
                 id: 'setGroupMemberRole',
-                name: '设置群角色'
+                name: '设置群角色',
             },
             {
                 id: 'transferGroupOwner',
-                name: '转移群主'
+                name: '转移群主',
             },
             {
                 id: 'searchGroups',
-                name: '搜索群列表'
+                name: '搜索群列表',
             },
             {
                 id: 'searchGroupMembers',
-                name: '搜索群成员'
+                name: '搜索群成员',
             },
             {
                 id: 'getGroupApplicationList',
-                name: '获取群申请列表'
+                name: '获取群申请列表',
             },
             {
                 id: 'refuseGroupApplication',
-                name: '拒绝群申请'
+                name: '拒绝群申请',
             },
             {
                 id: 'acceptGroupApplication',
-                name: '同意群申请'
+                name: '同意群申请',
             },
             {
                 id: 'GroupAttributes',
-                name: '直播群属性'
+                name: '直播群属性',
+            },
+            {
+                id: 'getJoinedCommunityList',
+                name: '获取加入的社群列表',
+            },
+            {
+                id: 'getTopicInfoList',
+                name: '获取话题列表',
+            },
+            {
+                id: 'createTopic',
+                name: '创建话题',
+            },
+            {
+                id: 'deleteTopic',
+                name: '删除话题',
+            },
+            {
+                id: 'setTopicInfo',
+                name: '修改话题',
             },
         ],
     },
@@ -194,73 +214,72 @@ const DATA = [
             },
             {
                 id: 'addFriend',
-                name: '添加好友'
+                name: '添加好友',
             },
             {
                 id: 'setFriendInfo',
-                name: '设置好友信息'
+                name: '设置好友信息',
             },
             {
                 id: 'deleteFromFriendList',
-                name: '删除好友'
+                name: '删除好友',
             },
             {
                 id: 'checkFriend',
-                name: '检测好友'
+                name: '检测好友',
             },
             {
                 id: 'getFriendApplicationList',
-                name: '获得好友申请列表'
+                name: '获得好友申请列表',
             },
             {
                 id: 'agreeFriendApplication',
-                name: '同意好友申请'
+                name: '同意好友申请',
             },
             {
                 id: 'refuseFriendApplicationState',
-                name: '拒绝好友申请'
+                name: '拒绝好友申请',
             },
             {
                 id: 'getBlackList',
-                name: '获取黑名单列表'
+                name: '获取黑名单列表',
             },
             {
                 id: 'addToBlackList',
-                name: '添加到黑名单'
+                name: '添加到黑名单',
             },
             {
                 id: 'deleteFromBlackList',
-                name: '从黑名单移除'
+                name: '从黑名单移除',
             },
             {
                 id: 'createFriendGroup',
-                name: '创建好友分组'
+                name: '创建好友分组',
             },
             {
                 id: 'getFriendGroups',
-                name: '获取好友分组'
+                name: '获取好友分组',
             },
             {
                 id: 'deleteFriendGroup',
-                name: '删除好友分组'
+                name: '删除好友分组',
             },
             {
                 id: 'renameFriendGroup',
-                name: '重命名好友分组'
+                name: '重命名好友分组',
             },
             {
                 id: 'addFriendsToFriendGroup',
-                name: '添加好友到分组'
+                name: '添加好友到分组',
             },
             {
                 id: 'deleteFriendsFromFriendGroup',
-                name: '从分组中删除好友'
+                name: '从分组中删除好友',
             },
             {
                 id: 'searchFriends',
-                name: '搜索好友'
-            }
-
+                name: '搜索好友',
+            },
         ],
     },
     {
@@ -298,97 +317,116 @@ const DATA = [
             },
             {
                 id: 'sendLocationMessage',
-                name: '发送地理信息'
+                name: '发送地理信息',
             },
             {
                 id: 'sendFaceMessage',
-                name: '发送表情消息'
+                name: '发送表情消息',
             },
             {
                 id: 'sendMergerMessage',
-                name: '发送合并消息'
+                name: '发送合并消息',
             },
             {
                 id: 'sendForwardMessage',
-                name: '发送转发消息'
+                name: '发送转发消息',
             },
             {
                 id: 'reSendMessage',
-                name: '重发消息'
+                name: '重发消息',
             },
             {
                 id: 'setLocalCustomData',
-                name: '修改本地消息（String）'
+                name: '修改本地消息（String）',
             },
             {
                 id: 'setLocalCustomInt',
-                name: '修改本地消息（Int）'
+                name: '修改本地消息（Int）',
             },
             {
                 id: 'getC2CHistoryMessageList',
-                name: '获得C2C历史消息'
+                name: '获得C2C历史消息',
             },
             {
                 id: 'getGroupHistoryMessageList',
-                name: '获得Group历史消息'
+                name: '获得Group历史消息',
             },
             {
                 id: 'getHistoryMessageList',
-                name: '获得历史消息高级接口'
+                name: '获得历史消息高级接口',
             },
             {
                 id: 'revokeMessage',
-                name: '撤回消息'
+                name: '撤回消息',
             },
             {
                 id: 'markC2CMessageAsRead',
-                name: '标记C2C会话已读'
+                name: '标记C2C会话已读',
             },
             {
                 id: 'markGroupMessageAsRead',
-                name: '标记Group会话已读'
+                name: '标记Group会话已读',
             },
             {
                 id: 'markAllMessageAsRead',
-                name: '标记所有消息已读'
+                name: '标记所有消息已读',
             },
             {
                 id: 'deleteMessageFromLocalStorage',
-                name: '删除本地消息'
+                name: '删除本地消息',
             },
             {
                 id: 'deleteMessage',
-                name: '删除消息'
+                name: '删除消息',
             },
             {
                 id: 'insertGroupMessageToLocalStorage',
-                name: '向Group中插入一条本地消息'
+                name: '向Group中插入一条本地消息',
             },
             {
                 id: 'insertC2CMessageToLocalStorage',
-                name: '向C2C会话中插入一条本地消息'
+                name: '向C2C会话中插入一条本地消息',
             },
             {
                 id: 'clearC2CHistoryMessage',
-                name: '清空单聊本地及云端的消息'
+                name: '清空单聊本地及云端的消息',
             },
             {
                 id: 'getC2CReceiveMessageOpt',
-                name: '获取用户消息接受选项'
+                name: '获取用户消息接受选项',
             },
             {
                 id: 'clearGroupHistoryMessage',
-                name: '清空群组单聊本地及云端的消息'
+                name: '清空群组单聊本地及云端的消息',
             },
             {
                 id: 'searchLocalMessage',
-                name: '搜索本地消息'
+                name: '搜索本地消息',
             },
             {
                 id: 'findMessage',
-                name: '查询指定会话中的本地消息'
-            }
-
+                name: '查询指定会话中的本地消息',
+            },
+            {
+                id: 'getMessageOnlineUrl',
+                name: '获取多媒体消息URL',
+            },
+            {
+                id: 'downloadMessage',
+                name: '下载多媒体消息',
+            },
+            {
+                id: 'setMessageExtensions',
+                name: '设置消息扩展',
+            },
+            {
+                id: 'getMessageExtensions',
+                name: '获取消息扩展',
+            },
+            {
+                id: 'deleteMessageExtensions',
+                name: '删除消息扩展',
+            },
         ],
     },
     {
@@ -457,28 +495,26 @@ const HomeScreen = (props) => {
     const onRouteTo = (id: String, name: String) => {
         props.navigation.navigate('Details', { idStr: id, nameStr: name });
     };
-    const itemPressHandle = (id: String, name: String)=>{
+    const itemPressHandle = (id: String, name: String) => {
         Promise.all([
             storage.load({ key: 'userID' }),
             storage.load({ key: 'secret' }),
             storage.load({ key: 'sdkappid' }),
-        ]).then(() => {
-            onRouteTo(id, name)
-        }).catch(() => {
-            Alert.alert(
-                '提示',
-                '请先完成信息配置',
-                [
+        ])
+            .then(() => {
+                onRouteTo(id, name);
+            })
+            .catch(() => {
+                Alert.alert('提示', '请先完成信息配置', [
                     {
-                        text:'OK',
-                        onPress:()=>{
-                            props.navigation.navigate('User')
-                        }
-                    }
-                ]
-            ) 
-        });     
-    }
+                        text: 'OK',
+                        onPress: () => {
+                            props.navigation.navigate('User');
+                        },
+                    },
+                ]);
+            });
+    };
     const Item = ({ name, id }: { name: String; id: String }) => {
         return (
             <TouchableOpacity
@@ -503,7 +539,7 @@ const HomeScreen = (props) => {
 
     const renderItemHandler = (info) => {
         return info.section.show ? (
-            <Item name={info.item.name} id={info.item.id}></Item>
+            <Item name={info.item.name} id={info.item.id} />
         ) : null;
     };
 
@@ -518,11 +554,11 @@ const HomeScreen = (props) => {
         setdataArr(newDataArr);
     };
 
-    const renderIcon = ()=>{
+    const renderIcon = () => {
         return (
-            <Image source={require('../icon/icon.png')} style={styles.icon}/>
-        )
-    }
+            <Image source={require('../icon/icon.png')} style={styles.icon} />
+        );
+    };
     return (
         <View style={styles.container}>
             <SectionList
@@ -533,8 +569,10 @@ const HomeScreen = (props) => {
             />
             <ActionButton
                 buttonColor="rgba(221,160,221,0.8)"
-                onPress={() => { props.navigation.navigate('CallBack'); }}
-                renderIcon={renderIcon} 
+                onPress={() => {
+                    props.navigation.navigate('CallBack');
+                }}
+                renderIcon={renderIcon}
             />
         </View>
     );
@@ -587,8 +625,8 @@ const styles = StyleSheet.create({
     itemTitle: {
         color: '#808a87',
     },
-    icon:{
-        width:40,
-        height:40
-    }
+    icon: {
+        width: 40,
+        height: 40,
+    },
 });

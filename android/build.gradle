@@ -12,6 +12,8 @@ buildscript {
     }
 }
 
+def REACT_NATIVE_VERSION = new File(['node', '--print',"JSON.parse(require('fs').readFileSync(require.resolve('react-native/package.json'), 'utf-8')).version"].execute(null, rootDir).text.trim())
+
 apply plugin: 'com.android.library'
 
 def safeExtGet(prop, fallback) {
@@ -56,5 +58,5 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    api 'com.tencent.imsdk:imsdk-plus:6.6.3002'
+    api 'com.tencent.imsdk:imsdk-plus:6.9.3557'
 }

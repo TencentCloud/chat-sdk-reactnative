@@ -58,6 +58,23 @@ public class CommonUtils {
             return V2TIM_IMAGE_TYPE_THUMB_ANDROID
         }
     }
+    
+    public static func changeToIos(type:Int)->Int{
+        let V2TIM_IMAGE_TYPE_ORIGIN_ANDROID = 0;
+        let V2TIM_IMAGE_TYPE_THUMB_ANDROID = 1;
+        let V2TIM_IMAGE_TYPE_LARGE_ANDROID = 2;
+        if(type == V2TIM_IMAGE_TYPE_ORIGIN_ANDROID){
+            
+            return V2TIMImageType.IMAGE_TYPE_ORIGIN.rawValue
+        }
+        if(type == V2TIM_IMAGE_TYPE_THUMB_ANDROID){
+            return V2TIMImageType.IMAGE_TYPE_THUMB.rawValue
+        }
+        if(type == V2TIM_IMAGE_TYPE_LARGE_ANDROID){
+            return V2TIMImageType.IMAGE_TYPE_LARGE.rawValue
+        }
+        return 0;
+    }
 
     public static func getV2TIMOfflinePushInfo(param: [String: Any]) -> V2TIMOfflinePushInfo {
 		let v2TIMOfflinePushInfo = V2TIMOfflinePushInfo()

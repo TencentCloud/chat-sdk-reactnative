@@ -65,4 +65,8 @@ public enum ListenerType {
     case onTopicCreated
     case onTopicInfoChanged
     case onTopicDeleted
+    case onLog
+    case onRecvMessageExtensionsChanged
+    case onRecvMessageExtensionsDeleted
+    case onMessageDownloadProgressCallback
 }

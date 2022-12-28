@@ -36,6 +36,7 @@ public class V2MessageEntity {
 	var random: UInt64?;
 	var isExcludedFromUnreadCount: Bool?;
     var isExcludedFromLastMessage: Bool?;
+    var isSupportMessageExtension: Bool?;
     var id:String?; // 只有在onProgress时才能拿掉此id
 	var v2message: V2TIMMessage;
 	
@@ -68,7 +69,128 @@ public class V2MessageEntity {
 			message.mergerElem.downloadMergerMessage({ resolve($0 ?? []) }, fail: {_,_ in })
 		})
 	}
+    func downloadImageMessage(_ msgID:String,_ imageElem:V2TIMImageElem,_ imageType:Int,_ callback:DownloadCallback){
+        let fileManager = FileManager.default;
+        
+        for image in imageElem.imageList! {
+            if(image.type.rawValue != imageType){
+                continue;
+            }
+            let file_identify = "image_"+"\(image.size)\(image.width)\(image.height)" ;
+            
+            let path = NSTemporaryDirectory() + "\(file_identify)_\(image.uuid!)";
+            if !fileManager.fileExists(atPath: path) {
 
+                image.downloadImage(path, progress: {
+                    (curSize, totalSize) -> Void in
+                    // print(curSize);
+                    callback.onProgress(false,false,curSize,totalSize, msgID,imageType,false,path,0,"");
+                }, succ: {
+                    callback.onProgress(true,false,0,0, msgID,imageType,false,path,0,"");
+                }, fail: {
+                    (code, msg) -> Void in
+                    callback.onProgress(false,true,0,0, msgID,imageType,false,path,code,msg);
+                    print("下载失败：desc:"+(msg ?? ""))
+                })
+
+            } else {
+                callback.onProgress(true,false,0,0, msgID,imageType,false,path,0,"");
+                // 图片存在，无需处理
+            }
+        }
+        
+    }
+    func downloadFileMessage(_ msgID:String,_ fileElem:V2TIMFileElem,_ callback:DownloadCallback){
+        let fileManager = FileManager.default;
+        
+        let path = NSTemporaryDirectory() + "file_"+"\(fileElem.uuid ?? "")";
+        
+           
+            if !fileManager.fileExists(atPath: path) {
+                        
+                fileElem.downloadFile(path, progress: {
+                    (curSize, totalSize) -> Void in
+                    callback.onProgress(false,false,curSize,totalSize, msgID,0,false,path,0,"");
+                }, succ: {
+                    callback.onProgress(true,false,0,0, msgID,0,false,path,0,"");
+                }, fail: {
+                    (code, msg) -> Void in
+                    callback.onProgress(false,true,0,0, msgID,0,false,path,code,msg);
+                    print("下载失败：desc:"+(msg ?? ""))
+                })
+
+            } else {
+                callback.onProgress(true,false,0,0, msgID,0,false,path,0,"");
+                // 图片存在，无需处理
+            }
+        
+        
+    }
+    func downloadSoundMessage(_ msgID:String,_ soundElem:V2TIMSoundElem,_ callback:DownloadCallback){
+        let fileManager = FileManager.default;
+        
+        let path = NSTemporaryDirectory()+"sound_"+"\(soundElem.uuid ?? "")";
+        
+           
+            if !fileManager.fileExists(atPath: path) {
+                soundElem.downloadSound(path, progress: {
+                                (curSize, totalSize) -> Void in
+                    callback.onProgress(false,false,curSize,totalSize, msgID,0,false,path,0,"");
+                            }, succ: {
+                                callback.onProgress(true,false,0,0, msgID,0,false,path,0,"");
+                            }, fail: {
+                                (code, msg) -> Void in
+                                callback.onProgress(false,true,0,0, msgID,0,false,path,code,msg);
+                                print("下载失败：desc:"+(msg ?? ""))
+                            })
+                
+
+            } else {
+                callback.onProgress(true,false,0,0, msgID,0,false,path,0,"");
+                // 图片存在，无需处理
+            }
+        
+    }
+    func downloadVideoMessage(_ msgID:String,_ videoElem:V2TIMVideoElem,_ issnapshot:Bool,_ callback:DownloadCallback){
+        let fileManager = FileManager.default;
+        let pathSnapshot = NSTemporaryDirectory()+"video_"+"\(videoElem.snapshotUUID ?? "")";
+        let pathVideo = NSTemporaryDirectory()+"video_"+"\(videoElem.videoUUID ?? "")";
+        
+        
+        if(issnapshot){
+            if !fileManager.fileExists(atPath: pathSnapshot) {
+                videoElem.downloadSnapshot(pathSnapshot, progress: {
+                    (curSize, totalSize) -> Void in
+                    callback.onProgress(false,false,curSize,totalSize, msgID,0,true,pathSnapshot,0,"");
+                }, succ: {
+                    callback.onProgress(true,false,0,0, msgID,0,true,pathSnapshot,0,"");
+                }, fail: {
+                    (code, msg) -> Void in
+                    callback.onProgress(false,true,0,0, msgID,0,true,pathSnapshot,code,msg);
+                                                    print("下载失败：desc:"+(msg ?? ""))
+                })
+            } else {
+                callback.onProgress(true,false,0,0, msgID,0,true,pathSnapshot,0,"");
+            }
+        }else{
+            
+                    if !fileManager.fileExists(atPath: pathVideo) {
+                        videoElem.downloadVideo(pathVideo, progress: {
+                            (curSize, totalSize) -> Void in
+                            callback.onProgress(false,false,curSize,totalSize, msgID,0,false,pathVideo,0,"");
+                        }, succ: {
+                            callback.onProgress(true,false,0,0, msgID,0,false,pathVideo,0,"");
+                        }, fail: {
+                            (code, msg) -> Void in
+                            callback.onProgress(false,true,0,0, msgID,0,false,pathVideo,code,msg);
+                                                            print("下载失败：desc:"+(msg ?? ""))
+                        })
+                    } else {
+                        callback.onProgress(true,false,0,0, msgID,0,false,pathVideo,0,"");
+                    }
+        }
+        
+    }
 	// ios差异化问题，message不会返回这两个字段就不进行设置
 	func getDictAll(progress: Int? = 100, status: Int? = nil) -> Promise<Dictionary<String, Any>> {
 		return async({
@@ -100,7 +222,7 @@ public class V2MessageEntity {
 				let messageList = try Hydra.await(self.downloadMergerMessage(self.v2message))
 				var list: Array<Dictionary<String, Any>> = []
 				for item in messageList {
-					let msg = try Hydra.await(V2MessageEntity.init(message: item).getDictAll())
+					let msg = V2MessageEntity.init(message: item).getDict()
 					list.append(msg)
 				}
 				self.mergerElem!["messageList"] = list
@@ -116,46 +238,48 @@ public class V2MessageEntity {
 	}
 	
 	func getDict(progress: Int? = nil, status: Int? = nil) -> [String: Any] {
-		var result: [String: Any] = [:]
-		result["msgID"] = self.msgID
-		result["sender"] = self.sender
-		result["nickName"] = self.nickName
-		result["friendRemark"] = self.friendRemark
-		result["nameCard"] = self.nameCard
-		result["faceUrl"] = self.faceUrl
-		result["groupID"] = self.groupID
-		result["userID"] = self.userID
-		result["status"] = self.status
-		result["isSelf"] = self.isSelf
-		result["isRead"] = self.isRead
-		result["isPeerRead"] = self.isPeerRead
+        var result: [String: Any] = [:]
+        result["msgID"] = self.msgID
+        result["sender"] = self.sender
+        result["nickName"] = self.nickName
+        result["friendRemark"] = self.friendRemark
+        result["nameCard"] = self.nameCard
+        result["faceUrl"] = self.faceUrl
+        result["groupID"] = self.groupID
+        result["userID"] = self.userID
+        result["status"] = self.status
+        result["isSelf"] = self.isSelf
+        result["isRead"] = self.isRead
+        result["isPeerRead"] = self.isPeerRead
         result["needReadReceipt"] = self.needReadReceipt;
-		result["groupAtUserList"] = self.groupAtUserList
-		result["elemType"] = self.elemType
-		result["localCustomInt"] = self.localCustomInt
-		result["textElem"] = self.textElem;
-		result["customElem"] = self.customElem;
-		result["imageElem"] = self.imageElem;
-		result["soundElem"] = self.soundElem;
-		result["videoElem"] = self.videoElem;
-		result["fileElem"] = self.fileElem;
-		result["locationElem"] = self.locationElem;
-		result["faceElem"] = self.faceElem;
-		result["mergerElem"] = self.mergerElem;
-		result["groupTipsElem"] = self.groupTipsElem;
-		result["localCustomData"] = self.localCustomData;
-		result["localCustomInt"] = self.localCustomInt;
-		result["cloudCustomData"] = self.cloudCustomData;
+        result["groupAtUserList"] = self.groupAtUserList
+        result["elemType"] = self.elemType
+        result["localCustomInt"] = self.localCustomInt
+        result["textElem"] = self.textElem;
+        result["customElem"] = self.customElem;
+        result["imageElem"] = self.imageElem;
+        result["soundElem"] = self.soundElem;
+        result["videoElem"] = self.videoElem;
+        result["fileElem"] = self.fileElem;
+        result["locationElem"] = self.locationElem;
+        result["faceElem"] = self.faceElem;
+        result["mergerElem"] = self.mergerElem;
+        result["groupTipsElem"] = self.groupTipsElem;
+        result["localCustomData"] = self.localCustomData;
+        result["localCustomInt"] = self.localCustomInt;
+        result["cloudCustomData"] = self.cloudCustomData;
         result["seq"] = String(self.seq!)
-		result["random"] = self.random;
-		result["isExcludedFromUnreadCount"] = self.isExcludedFromUnreadCount;
+        result["random"] = self.random;
+        result["isExcludedFromUnreadCount"] = self.isExcludedFromUnreadCount;
         result["isExcludedFromLastMessage"] = self.isExcludedFromLastMessage;
+        result["isSupportMessageExtension"] = self.isSupportMessageExtension;
         result["id"] = self.id;
-		result["timestamp"] = (self.timestamp == nil) ? Int(Date().timeIntervalSince1970) : Int(self.timestamp!.timeIntervalSince1970)
-		result["offlinePushInfo"] = self.offlinePushInfo;
+        result["timestamp"] = (self.timestamp == nil) ? Int(Date().timeIntervalSince1970) : Int(self.timestamp!.timeIntervalSince1970)
+        result["offlinePushInfo"] = self.offlinePushInfo;
 
-		return result
+        return result
 	}
+    
     
     func convertTextMessage(textElem:V2TIMTextElem) -> [String: Any] {
         return [
@@ -167,7 +291,7 @@ public class V2MessageEntity {
         return [
             "data": String.init(data: customElem.data, encoding: String.Encoding.utf8) ?? "",
             "desc": customElem.desc  as Any,
-            "extension": customElem.extension  as Any
+            "extension": customElem.ext  as Any
         ]
     }
     
@@ -179,12 +303,12 @@ public class V2MessageEntity {
         if imageElem.imageList.isEmpty {
             result["imageList"] = [["img": ""]]
         }
+        let fileManager = FileManager.default;
         
         for image in imageElem.imageList! {
             var item: [String: Any] = [:];
-            let fileManager = FileManager.default;
-            let file_identify = "\(image.size)\(image.width)\(image.height)" ;
             
+            let file_identify = "image_"+"\(image.size)\(image.width)\(image.height)" ;
             let path = NSTemporaryDirectory() + "\(file_identify)_\(image.uuid!)";
             
             item["uuid"] = image.uuid;
@@ -194,22 +318,8 @@ public class V2MessageEntity {
             item["height"] = image.height;
             item["url"] = image.url;
             
-            if !fileManager.fileExists(atPath: path) && (item["url"] as! String).count > 10 {
-                
-                image.downloadImage(path, progress: {
-                    (curSize, totalSize) -> Void in
-                    // print(curSize);
-                }, succ: {
-                    
-                }, fail: {
-                    (code, msg) -> Void in
-                    
-                })
-                
-            } else {
-                
+            if fileManager.fileExists(atPath: path) {
                 item["localUrl"] = path;
-                // 图片存在，无需处理
             }
             
             list.append(item);
@@ -222,40 +332,30 @@ public class V2MessageEntity {
     
     func convertSoundMessageElem(soundElem:V2TIMSoundElem) -> [String:Any] {
         
-        let tempPath = NSTemporaryDirectory() + "\(soundElem.uuid ?? "")";
+        
+        
         let fileManager = FileManager.default;
-
+        let path = NSTemporaryDirectory()+"sound_"+"\(soundElem.uuid ?? "")";
         var item: [String: Any] = [:];
         item["UUID"] = soundElem.uuid as Any;
         item["dataSize"] = soundElem.dataSize;
         item["duration"] = soundElem.duration;
         // item["url"] = soundElem.url;
         item["path"] = soundElem.path;
-       
-//        soundElem.getUrl { _url in
-//            item["url"] = _url;
-//        }
-        
-        if !fileManager.fileExists(atPath: tempPath) {
-            soundElem.downloadSound(tempPath, progress: {
-                (curSize, totalSize) -> Void in
-            }, succ: {
-            }, fail: {
-                (code, msg) -> Void in
-            })
-        } else {
-            item["localUrl"] = tempPath;
+        if fileManager.fileExists(atPath: path) {
+            item["localUrl"] = path;
         }
+        
 
         return item;
 
     }
     
     func convertVideoMessageElem(videoElem:V2TIMVideoElem) -> [String:Any] {
-        let pathSnapshot = NSTemporaryDirectory() + "\(videoElem.snapshotUUID ?? "")";
-        let pathVideo = NSTemporaryDirectory() + "\(videoElem.videoUUID ?? "")";
+        
         let fileManager = FileManager.default;
-       
+        let pathSnapshot = NSTemporaryDirectory()+"video_"+"\(videoElem.snapshotUUID ?? "")";
+        let pathVideo = NSTemporaryDirectory()+"video_"+"\(videoElem.videoUUID ?? "")";
         var item: [String: Any] = [:];
         item["snapshotUUID"] = videoElem.snapshotUUID as Any;
         item["snapshotPath"] = videoElem.snapshotPath as Any;
@@ -268,53 +368,28 @@ public class V2MessageEntity {
         // item["videoUrl"] = videoElem.videoUrl as Any;
         item["videoSize"] = videoElem.videoSize;
         item["duration"] = videoElem.duration;
-
-        if !fileManager.fileExists(atPath: pathSnapshot) {
-            videoElem.downloadSnapshot(pathSnapshot, progress: {
-                (curSize, totalSize) -> Void in
-            }, succ: {
-            }, fail: {
-                (code, msg) -> Void in
-            })
-        } else {
+        if fileManager.fileExists(atPath: pathSnapshot) {
             item["localSnapshotUrl"] = pathSnapshot;
         }
-
-        if !fileManager.fileExists(atPath: pathVideo) {
-            videoElem.downloadVideo(pathVideo, progress: {
-                (curSize, totalSize) -> Void in
-            }, succ: {
-                
-            }, fail: {
-                (code, msg) -> Void in
-            })
-        } else {
+        if fileManager.fileExists(atPath: pathVideo) {
             item["localVideoUrl"] = pathVideo;
         }
+
         
        return item;
     }
     
     func convertFileElem(fileElem:V2TIMFileElem) -> [String:Any] {
-        let path = NSTemporaryDirectory() + "\(fileElem.uuid ?? "")";
         let fileManager = FileManager.default;
+        let path = NSTemporaryDirectory() + "file_"+"\(fileElem.uuid ?? "")";
+        
         var item: [String: Any] = [:];
         item["UUID"] = fileElem.uuid ?? "";
         item["path"] = fileElem.path;
         // item["url"] = fileElem.url;
         item["fileName"] = fileElem.filename;
         item["fileSize"] = fileElem.fileSize;
-//        fileElem.getUrl { _url in
-//            item["url"] = _url;
-//        }
-        if !fileManager.fileExists(atPath: path) {
-            fileElem.downloadFile(path, progress: {
-                (curSize, totalSize) -> Void in
-            }, succ: {
-            }, fail: {
-                (code, msg) -> Void in
-            })
-        } else {
+        if fileManager.fileExists(atPath: path) {
             item["localUrl"] = path;
         }
         return  item;
@@ -365,7 +440,8 @@ public class V2MessageEntity {
             let item: [String: Any] = [
                 "type": info.type.rawValue,
                 "value": info.value as Any,
-                "key": info.key as Any
+                "key": info.key as Any,
+                "boolValue": info.boolValue as Bool,
             ]
             groupChangeInfoList.append(item)
         }
@@ -447,7 +523,7 @@ public class V2MessageEntity {
 		self.isSelf = message.isSelf;
 		self.isRead = message.isRead;
         self.needReadReceipt = message.needReadReceipt;
-		self.groupAtUserList = message.groupAtUserList as? [String];
+		self.groupAtUserList = message.groupAtUserList as? [String] ?? [];
 		self.isPeerRead = message.isPeerRead;
 		self.elemType = message.elemType.rawValue;
 		self.localCustomInt = message.localCustomInt;
@@ -455,8 +531,8 @@ public class V2MessageEntity {
 		self.random = message.random;
 		self.isExcludedFromUnreadCount = message.isExcludedFromUnreadCount;
         self.isExcludedFromLastMessage = message.isExcludedFromLastMessage;
+        self.isSupportMessageExtension = message.supportMessageExtension;
 		self.v2message = message
-		
         if message.offlinePushInfo != nil {
             self.offlinePushInfo = [
                 "title": message.offlinePushInfo?.title as Any,
@@ -467,7 +543,7 @@ public class V2MessageEntity {
                 "ignoreIOSBadge": message.offlinePushInfo?.ignoreIOSBadge as Any,
                 "androidOPPOChannelID": message.offlinePushInfo?.androidOPPOChannelID as Any,
                 "androidVIVOClassification": message.offlinePushInfo?.androidVIVOClassification as Any,
-                "androidSound": message.offlinePushInfo?.androidSound as Any,
+                "androidSound": message.offlinePushInfo?.androidSound  as Any,
             ]
         }
 

@@ -6,24 +6,25 @@ import CommonButton from '../commonComponents/CommonButton';
 import SDKResponseView from '../sdkResponseView';
 
 const GetJoinedGroupListComponent = () => {
-
     const [res, setRes] = React.useState<any>({});
-    const getJoinedGroupList = async()=>{
-        const res = await TencentImSDKPlugin.v2TIMManager.getGroupManager().getJoinedGroupList()
-        setRes(res)
-    }
+    const getJoinedGroupList = async () => {
+        const response = await TencentImSDKPlugin.v2TIMManager
+            .getGroupManager()
+            .getJoinedGroupList();
+        setRes(response);
+    };
     const CodeComponent = () => {
         return res.code !== undefined ? (
             <SDKResponseView codeString={JSON.stringify(res, null, 2)} />
         ) : null;
     };
     return (
-        <View style={{height: '100%'}}>
+        <View style={{ height: '100%' }}>
             <CommonButton
                 handler={() => getJoinedGroupList()}
                 content={'获取加群列表'}
-            ></CommonButton>
-            <CodeComponent></CodeComponent>
+            />
+            <CodeComponent />
         </View>
     );
 };

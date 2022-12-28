@@ -1,9 +1,0 @@
-type: enum
-name: GroupApplicationTypeEnum
-features: 入群申请类型
-ignore: false
-attributes:
-  - name: V2TIM_GROUP_APPLICATION_GET_TYPE_JOIN
-    description: 申请入群
-  - name: V2TIM_GROUP_APPLICATION_GET_TYPE_INVITE
-    description: 被邀请入群

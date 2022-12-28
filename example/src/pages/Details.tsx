@@ -99,13 +99,23 @@ import GetGroupApplicationListComponent from '../components/groupComponents/GetG
 import RefuseGroupApplicationComponent from '../components/groupComponents/RefuseGroupApplication';
 import AcceptGroupApplicationComponent from '../components/groupComponents/AcceptGroupApplication';
 import InitGroupAttributesComponent from '../components/groupComponents/InitGroupAttributes';
+import GetJoinedCommunityList from '../components/groupComponents/GetJoinedCommunityList';
+import GetTopicInfoList from '../components/groupComponents/GetTopicInfoList';
+import CreateTopicInCommunity from '../components/groupComponents/CreateTopicInCommunity';
+import DeleteTopicInfoList from '../components/groupComponents/DeleteTopicFromCommunity';
+import SetTopicInfo from '../components/groupComponents/SetTopicInfo';
+import DownloadMessageComponent from '../components/messageComponents/DownloadMessage';
+import GetMessageOnlineUrlComponent from '../components/messageComponents/GetMessageOnlineUrl';
+import GetMessageExtensionsComponent from '../components/messageComponents/GetMessageExtensions';
+import DeleteMessageExtensionsComponent from '../components/messageComponents/DeleteMessageExtensions';
+import SetMessageExtensionsComponent from '../components/messageComponents/SetMessageExtensions';
 const DetailsScreen = ({ navigation }) => {
     const id = navigation.state.params.idStr;
     const renderIcon = () => {
         return (
             <Image source={require('../icon/icon.png')} style={styles.icon} />
-        )
-    }
+        );
+    };
     return (
         <>
             <View style={styles.detail}>
@@ -132,7 +142,7 @@ const DetailsScreen = ({ navigation }) => {
                         case 'sendGroupTextMessage':
                             return <SendGroupTextMessageComponent />;
                         case 'sendGroupCustomMessage':
-                            return <SendGroupCustomMessageComponent />
+                            return <SendGroupCustomMessageComponent />;
                         case 'getUsersInfo':
                             return <GetUsersInfoComponent />;
                         case 'getFriendList':
@@ -161,6 +171,16 @@ const DetailsScreen = ({ navigation }) => {
                             return <GetGroupsInfoComponent />;
                         case 'getJoinedGroupList':
                             return <GetJoinedGroupListComponent />;
+                        case 'getJoinedCommunityList':
+                            return <GetJoinedCommunityList />;
+                        case 'getTopicInfoList':
+                            return <GetTopicInfoList />;
+                        case 'createTopic':
+                            return <CreateTopicInCommunity />;
+                        case 'deleteTopic':
+                            return <DeleteTopicInfoList />;
+                        case 'setTopicInfo':
+                            return <SetTopicInfo />;
                         case 'quitGroup':
                             return <QuitGroupComponent />;
                         case 'dismissGroup':
@@ -284,11 +304,23 @@ const DetailsScreen = ({ navigation }) => {
                         case 'findMessage':
                             return <FindMessageComponent />;
                         case 'insertGroupMessageToLocalStorage':
-                            return <InsertGroupMessageToLocalStorageComponent />;
+                            return (
+                                <InsertGroupMessageToLocalStorageComponent />
+                            );
                         case 'insertC2CMessageToLocalStorage':
                             return <InsertC2CMessageToLocalStorageComponent />;
                         case 'getHistoryMessageList':
                             return <GetHistoryMessageListComponent />;
+                        case 'getMessageOnlineUrl':
+                            return <GetMessageOnlineUrlComponent />;
+                        case 'downloadMessage':
+                            return <DownloadMessageComponent />;
+                        case 'getMessageExtensions':
+                            return <GetMessageExtensionsComponent />;
+                        case 'deleteMessageExtensions':
+                            return <DeleteMessageExtensionsComponent />;
+                        case 'setMessageExtensions':
+                            return <SetMessageExtensionsComponent />;
                         case 'addEventListener':
                             return <AddEventListenerComponent />;
                         case 'invite':
@@ -298,13 +330,13 @@ const DetailsScreen = ({ navigation }) => {
                         case 'getSignallingInfo':
                             return <GetSignallingInfoComponent />;
                         case 'getGroupApplicationList':
-                            return <GetGroupApplicationListComponent/>;
+                            return <GetGroupApplicationListComponent />;
                         case 'refuseGroupApplication':
-                            return <RefuseGroupApplicationComponent/>;
+                            return <RefuseGroupApplicationComponent />;
                         case 'acceptGroupApplication':
-                            return <AcceptGroupApplicationComponent/>;
+                            return <AcceptGroupApplicationComponent />;
                         case 'GroupAttributes':
-                            return <InitGroupAttributesComponent/>;
+                            return <InitGroupAttributesComponent />;
                         default:
                             return <></>;
                     }
@@ -312,11 +344,12 @@ const DetailsScreen = ({ navigation }) => {
             </View>
             <ActionButton
                 buttonColor="rgba(221,160,221,0.8)"
-                onPress={() => { navigation.navigate('CallBack'); }}
+                onPress={() => {
+                    navigation.navigate('CallBack');
+                }}
                 renderIcon={renderIcon}
             />
         </>
-
     );
 };
 export default DetailsScreen;
@@ -337,6 +370,6 @@ const styles = StyleSheet.create({
     },
     icon: {
         width: 40,
-        height: 40
-    }
+        height: 40,
+    },
 });

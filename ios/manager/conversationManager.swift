@@ -158,7 +158,7 @@ class ConversationManager {
             filter_native.nextSeq = (filter["nextSeq"] as! UInt64)
         }
         if(filter["count"]  as? UInt32 != nil){
-            filter_native.count = (filter["count"] as! UInt32)
+            filter_native.count = (filter["count"] as! UInt)
         }
         if(filter["markType"]  as? UInt32 != nil){
             let u64: UInt64 = 1;

@@ -12,6 +12,7 @@ import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.NoSuchKeyException;
 
+import com.reactnativetimjs.uitils.DownloadCallback;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMConversationOperationResult;
@@ -43,6 +44,8 @@ import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMLocationElem;
 import com.tencent.imsdk.v2.V2TIMMergerElem;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMMessageExtension;
+import com.tencent.imsdk.v2.V2TIMMessageExtensionResult;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMMessageSearchResult;
 import com.tencent.imsdk.v2.V2TIMMessageSearchResultItem;
@@ -108,6 +111,8 @@ public class CommonUtils {
     }
 
     public static <T> void emmitEvent(String eventName, String eventType, T data) {
+      logFromNative("eventName"+eventName);
+      logFromNative("eventType"+eventType);
         HashMap<String, Object> succ = new HashMap<String, Object>();
         succ.put("eventName", eventName);
         succ.put("type", eventType);
@@ -282,7 +287,7 @@ public class CommonUtils {
         } else if (type == V2TIMMessage.V2TIM_ELEM_TYPE_SOUND) {
             final V2TIMSoundElem soundElem = msg.getSoundElem();
             V2TIMElem nextElem = soundElem.getNextElem();
-            final HashMap<String, Object> sound = CommonUtils.convertSoundMessageElem(soundElem);
+            final HashMap<String, Object> sound = CommonUtils.convertSoundMessageElem(soundElem,false);
             if (nextElem != null) {
                 sound.put("nextElem", CommonUtils.convertMessageElem(nextElem));
             }
@@ -290,7 +295,7 @@ public class CommonUtils {
         } else if (type == V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO) {
             V2TIMVideoElem videoElem = msg.getVideoElem();
             V2TIMElem nextElem = videoElem.getNextElem();
-            final HashMap<String, Object> video = CommonUtils.convertVideoMessageElem(videoElem);
+            final HashMap<String, Object> video = CommonUtils.convertVideoMessageElem(videoElem,false);
             if (nextElem != null) {
                 video.put("nextElem", CommonUtils.convertMessageElem(nextElem));
             }
@@ -298,7 +303,7 @@ public class CommonUtils {
         } else if (type == V2TIMMessage.V2TIM_ELEM_TYPE_FILE) {
             final V2TIMFileElem fileElem = msg.getFileElem();
             V2TIMElem nextElem = fileElem.getNextElem();
-            final HashMap<String, Object> file = CommonUtils.convertFileMessageElem(fileElem);
+            final HashMap<String, Object> file = CommonUtils.convertFileMessageElem(fileElem,false);
             if (nextElem != null) {
                 file.put("nextElem", CommonUtils.convertMessageElem(nextElem));
             }
@@ -340,6 +345,173 @@ public class CommonUtils {
         return message;
     }
 
+    public static void downloadImageMessage(final String msgID, V2TIMImageElem elem, int imageType,final DownloadCallback callback){
+      File cacheDir =  context.getExternalCacheDir();
+      for (int i=0;i<elem.getImageList().size();i++){
+        final V2TIMImageElem.V2TIMImage imgInstance = elem.getImageList().get(i);
+        if(imageType != imgInstance.getType()){
+          continue;
+        }
+        try{
+          if(cacheDir.exists()){
+            final String path =  cacheDir.getPath()+"/image_"+imgInstance.getType()+""+imgInstance.getSize()+""+imgInstance.getWidth()+imgInstance.getHeight()+"_"+imgInstance.getUUID();
+            File file = new File(path);
+            if(!file.exists()){
+              imgInstance.downloadImage(path, new V2TIMDownloadCallback() {
+                @Override
+                public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
+                  callback.onProgress(false,false,v2ProgressInfo.getCurrentSize(),v2ProgressInfo.getTotalSize(),msgID,imgInstance.getType(),false,path,0,"");
+                }
+
+                @Override
+                public void onSuccess() {
+                  callback.onProgress(true,false,0,0,msgID,imgInstance.getType(),false,path,0,"");
+                }
+
+                @Override
+                public void onError(int i, String s) {
+                  System.out.println("下载失败:"+i+","+s);
+                  callback.onProgress(false,false,0,0,msgID,imgInstance.getType(),false,path,i,s);
+                }
+              });
+            }else{
+              callback.onProgress(true,false,0,0,msgID,imgInstance.getType(),false,path,0,"");
+            }
+          }
+        }catch (Exception err){
+          System.out.println(err);
+        }
+      }
+    }
+
+    public static void downloadFileMessage(final String msgID, V2TIMFileElem elem, final DownloadCallback callback){
+      try {
+        File cacheDir = context.getExternalCacheDir();
+
+        if (cacheDir.exists()) {
+          final String path = cacheDir.getPath() + "/file_"+ elem.getUUID();
+          File f = new File(path);
+          if(!f.exists()){
+            elem.downloadFile(path, new V2TIMDownloadCallback() {
+              @Override
+              public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
+                callback.onProgress(false,false,v2ProgressInfo.getCurrentSize(),v2ProgressInfo.getTotalSize(),msgID,0,false,path,0,"");
+              }
+
+              @Override
+              public void onSuccess() {
+                callback.onProgress(true,false,0,0,msgID,0,false,path,0,"");
+              }
+
+              @Override
+              public void onError(int i, String s) {
+                System.out.println("下载失败:"+i+","+s);
+                callback.onProgress(false,true,0,0,msgID,0,false,path,i,s);
+              }
+            });
+          }else{
+            callback.onProgress(true,false,0,0,msgID,0,false,path,0,"");
+          }
+        }
+      }catch (Exception errr){
+
+      }
+    }
+
+    public static void downloadDoundMessage(final String msgID, V2TIMSoundElem elem, final DownloadCallback callback){
+      try {
+        File cacheDir = context.getExternalCacheDir();
+
+        if (cacheDir.exists()) {
+          final String path = cacheDir.getPath() + "/sound_"+ elem.getUUID();
+          File file = new File(path);
+          if(!file.exists()){
+            elem.downloadSound(path, new V2TIMDownloadCallback() {
+              @Override
+              public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
+                callback.onProgress(false,false,v2ProgressInfo.getCurrentSize(),v2ProgressInfo.getTotalSize(),msgID,0,false,path,0,"");
+              }
+
+              @Override
+              public void onSuccess() {
+                callback.onProgress(true,false,0,0,msgID,0,false,path,0,"");
+              }
+
+              @Override
+              public void onError(int i, String s) {
+                System.out.println("下载失败:"+i+","+s);
+                callback.onProgress(false,true,0,0,msgID,0,false,path,i,s);
+              }
+            });
+          }else{
+            callback.onProgress(true,false,0,0,msgID,0,false,path,0,"");
+          }
+        }
+      }catch (Exception errr){
+        logFromNative("errr: " + errr);
+
+      }
+    }
+
+    public static void downloadVideoMessage(final String msgID, V2TIMVideoElem elem,boolean isSnapshot, final DownloadCallback callback){
+      try {
+        File cacheDir = context.getExternalCacheDir();
+
+        if (cacheDir.exists()) {
+          final String path = cacheDir.getPath() + "/video_"+ elem.getVideoUUID();
+          final String snipPath = cacheDir.getPath() + "/video_" + elem.getSnapshotUUID();
+          File file = new File(path);
+          File snip = new File(snipPath);
+          if(!isSnapshot){
+            if (!file.exists()) {
+              elem.downloadVideo(path, new V2TIMDownloadCallback() {
+                @Override
+                public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
+                  callback.onProgress(false,false,v2ProgressInfo.getCurrentSize(),v2ProgressInfo.getTotalSize(),msgID,0,false,path,0,"");
+                }
+
+                @Override
+                public void onSuccess() {
+                  callback.onProgress(true,false,0,0,msgID,0,false,path,0,"");
+                }
+
+                @Override
+                public void onError(int i, String s) {
+                  System.out.println("下载失败:"+i+","+s);
+                  callback.onProgress(false,true,0,0,msgID,0,false,path,i,s);
+                }
+              });
+            }else{
+            }
+          }else{
+            if(!snip.exists()){
+              elem.downloadSnapshot(snipPath, new V2TIMDownloadCallback() {
+                @Override
+                public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
+                  callback.onProgress(false,false,v2ProgressInfo.getCurrentSize(),v2ProgressInfo.getTotalSize(),msgID,0,true,path,0,"");
+                }
+
+                @Override
+                public void onSuccess() {
+                  callback.onProgress(true,false,0,0,msgID,0,true,path,0,"");
+                }
+
+                @Override
+                public void onError(int i, String s) {
+                  System.out.println("下载失败:"+i+","+s);
+                  callback.onProgress(false,true,0,0,msgID,0,true,path,i,s);
+                }
+              });
+            }else{
+            }
+          }
+
+        }
+      }catch (Exception err){
+
+      }
+    }
+
     public static HashMap<String, Object> convertTextMessageElem(V2TIMTextElem elem) {
         HashMap<String, Object> messageElem = new HashMap<String, Object>();
         V2TIMTextElem textElem = (V2TIMTextElem) elem;
@@ -360,13 +532,13 @@ public class CommonUtils {
                 messageElem = CommonUtils.convertImageMessageElem((V2TIMImageElem) elem);
                 messageElem.put("elemType", V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE);
             } else if (elem instanceof V2TIMSoundElem) {
-                messageElem = CommonUtils.convertSoundMessageElem((V2TIMSoundElem) elem);
+                messageElem = CommonUtils.convertSoundMessageElem((V2TIMSoundElem) elem,false);
                 messageElem.put("elemType", V2TIMMessage.V2TIM_ELEM_TYPE_SOUND);
             } else if (elem instanceof V2TIMVideoElem) {
-                messageElem = CommonUtils.convertVideoMessageElem((V2TIMVideoElem) elem);
+                messageElem = CommonUtils.convertVideoMessageElem((V2TIMVideoElem) elem,false);
                 messageElem.put("elemType", V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO);
             } else if (elem instanceof V2TIMFileElem) {
-                messageElem = CommonUtils.convertFileMessageElem((V2TIMFileElem) elem);
+                messageElem = CommonUtils.convertFileMessageElem((V2TIMFileElem) elem,false);
                 messageElem.put("elemType", V2TIMMessage.V2TIM_ELEM_TYPE_FILE);
             } else if (elem instanceof V2TIMFaceElem) {
                 messageElem = CommonUtils.convertFaceMessageElem((V2TIMFaceElem) elem);
@@ -450,13 +622,14 @@ public class CommonUtils {
         return img;
     }
 
-    public static HashMap<String, Object> convertSoundMessageElem(V2TIMSoundElem soundElem) {
+    public static HashMap<String, Object> convertSoundMessageElem(V2TIMSoundElem soundElem,boolean isGetUrl) {
         final HashMap<String, Object> sound = new HashMap<String, Object>();
         sound.put("dataSize", soundElem.getDataSize());
         sound.put("duration", soundElem.getDuration());
         sound.put("path", soundElem.getPath());
         sound.put("UUID", soundElem.getUUID());
-        soundElem.getUrl(new V2TIMValueCallback<String>() {
+        if(isGetUrl){
+          soundElem.getUrl(new V2TIMValueCallback<String>() {
             @Override
             public void onError(int i, String s) {
 
@@ -464,45 +637,29 @@ public class CommonUtils {
 
             @Override
             public void onSuccess(String s) {
-                sound.put("url", s);
+              sound.put("url", s);
             }
-        });
+          });
+        }
         try {
             File cacheDir = context.getExternalCacheDir();
-
             if (cacheDir.exists()) {
-                String path = cacheDir.getPath() + "/" + soundElem.getUUID();
+                String path = cacheDir.getPath() + "/sound_" + soundElem.getUUID();
                 File file = new File(path);
-                if (!file.exists()) {
-                    soundElem.downloadSound(path, new V2TIMDownloadCallback() {
-                        @Override
-                        public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
-
-                        }
-
-                        @Override
-                        public void onSuccess() {
-
-                        }
-
-                        @Override
-                        public void onError(int i, String s) {
-
-                        }
-                    });
-                } else {
-                    sound.put("localUrl", path);
+                if (file.exists()) {
+                  sound.put("localUrl", path);
                 }
             }
         } catch (Exception errr) {
-
+          logFromNative("errr: " + errr);
         }
         return sound;
     }
 
-    public static HashMap<String, Object> convertVideoMessageElem(V2TIMVideoElem videoElem) {
+    public static HashMap<String, Object> convertVideoMessageElem(V2TIMVideoElem videoElem,boolean isGetUrl) {
         final HashMap<String, Object> video = new HashMap<String, Object>();
-        videoElem.getVideoUrl(new V2TIMValueCallback<String>() {
+        if(isGetUrl){
+          videoElem.getVideoUrl(new V2TIMValueCallback<String>() {
             @Override
             public void onError(int i, String s) {
 
@@ -510,10 +667,10 @@ public class CommonUtils {
 
             @Override
             public void onSuccess(String s) {
-                video.put("videoUrl", s);
+              video.put("videoUrl", s);
             }
-        });
-        videoElem.getSnapshotUrl(new V2TIMValueCallback<String>() {
+          });
+          videoElem.getSnapshotUrl(new V2TIMValueCallback<String>() {
             @Override
             public void onError(int i, String s) {
 
@@ -521,9 +678,10 @@ public class CommonUtils {
 
             @Override
             public void onSuccess(String s) {
-                video.put("snapshotUrl", s);
+              video.put("snapshotUrl", s);
             }
-        });
+          });
+        }
         video.put("duration", videoElem.getDuration());
         video.put("snapshotHeight", videoElem.getSnapshotHeight());
         video.put("snapshotPath", videoElem.getSnapshotPath());
@@ -535,66 +693,31 @@ public class CommonUtils {
         video.put("UUID", videoElem.getVideoUUID());
         try {
             File cacheDir = context.getExternalCacheDir();
-
             if (cacheDir.exists()) {
-                String path = cacheDir.getPath() + "/" + videoElem.getVideoUUID();
-                String snipPath = cacheDir.getPath() + "/" + videoElem.getSnapshotUUID();
+                String path = cacheDir.getPath() + "/video_" + videoElem.getVideoUUID();
+                String snipPath = cacheDir.getPath() + "/video_" + videoElem.getSnapshotUUID();
                 File file = new File(path);
                 File snip = new File(snipPath);
-                if (!file.exists()) {
-                    videoElem.downloadVideo(path, new V2TIMDownloadCallback() {
-                        @Override
-                        public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
-
-                        }
-
-                        @Override
-                        public void onSuccess() {
-
-                        }
-
-                        @Override
-                        public void onError(int i, String s) {
-
-                        }
-                    });
-                } else {
-                    video.put("localVideoUrl", path);
+                if (file.exists()) {
+                  video.put("localVideoUrl", path);
                 }
-                if (!snip.exists()) {
-                    videoElem.downloadSnapshot(snipPath, new V2TIMDownloadCallback() {
-                        @Override
-                        public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
-
-                        }
-
-                        @Override
-                        public void onSuccess() {
-
-                        }
-
-                        @Override
-                        public void onError(int i, String s) {
-
-                        }
-                    });
-                } else {
-                    video.put("localSnapshotUrl", snipPath);
+                if (snip.exists()) {
+                  video.put("localSnapshotUrl", snipPath);
                 }
             }
         } catch (Exception err) {
-
         }
         return video;
     }
 
-    public static HashMap<String, Object> convertFileMessageElem(V2TIMFileElem fileElem) {
+    public static HashMap<String, Object> convertFileMessageElem(V2TIMFileElem fileElem,boolean isGetUrl) {
         final HashMap<String, Object> file = new HashMap<String, Object>();
         file.put("fileName", fileElem.getFileName());
         file.put("fileSize", fileElem.getFileSize());
         file.put("path", fileElem.getPath());
         file.put("UUID", fileElem.getUUID());
-        fileElem.getUrl(new V2TIMValueCallback<String>() {
+        if(isGetUrl){
+          fileElem.getUrl(new V2TIMValueCallback<String>() {
             @Override
             public void onError(int i, String s) {
 
@@ -602,34 +725,17 @@ public class CommonUtils {
 
             @Override
             public void onSuccess(String s) {
-                file.put("url", s);
+              file.put("url", s);
             }
-        });
+          });
+        }
         try {
             File cacheDir = context.getExternalCacheDir();
-
             if (cacheDir.exists()) {
-                String path = cacheDir.getPath() + "/" + fileElem.getUUID();
+                String path = cacheDir.getPath() + "/file_" + fileElem.getUUID();
                 File f = new File(path);
-                if (!f.exists()) {
-                    fileElem.downloadFile(path, new V2TIMDownloadCallback() {
-                        @Override
-                        public void onProgress(V2TIMElem.V2ProgressInfo v2ProgressInfo) {
-
-                        }
-
-                        @Override
-                        public void onSuccess() {
-
-                        }
-
-                        @Override
-                        public void onError(int i, String s) {
-
-                        }
-                    });
-                } else {
-                    file.put("localUrl", path);
+                if (f.exists()) {
+                  file.put("localUrl", path);
                 }
             }
         } catch (Exception errr) {
@@ -779,6 +885,37 @@ public class CommonUtils {
         }
 
         return result;
+    }
+
+    public static List<Map<String,String>> convertExtensionReadableArrayToListMapString(@Nullable ReadableArray readableArray) {
+      if (readableArray == null) {
+        return null;
+      }
+
+      List<Map<String,String>> result = new ArrayList<Map<String,String>>(readableArray.size());
+
+      for (int index = 0; index < readableArray.size(); index++) {
+        ReadableType readableType = readableArray.getType(index);
+
+        switch (readableType) {
+          case Null:
+            break;
+          case Map:
+            final HashMap<String, String> extension = new HashMap<String, String>();
+            if(readableArray.getMap(index).hasKey("extensionKey")){
+              extension.put("extensionKey", readableArray.getMap(index).getString("extensionKey"));
+            }
+            if(readableArray.getMap(index).hasKey("extensionValue")){
+              extension.put("extensionValue", readableArray.getMap(index).getString("extensionValue"));
+            }
+            result.add(extension);
+            break;
+          default:
+            throw new IllegalArgumentException("Could not convert object with key: " + index + ".");
+        }
+      }
+
+      return result;
     }
 
     public static List<HashMap<String, Object>> convertReadableArrayToListHashMap(
@@ -1253,15 +1390,15 @@ public class CommonUtils {
     public static HashMap<String, Object> convertV2TIMSignalingInfoToMap(V2TIMSignalingInfo info) {
         HashMap<String, Object> rinfo = new HashMap<String, Object>();
         rinfo.put("actionType", info.getActionType());
-        rinfo.put("businessID", info.getBusinessID());
+        // rinfo.put("businessID", info.getBusinessID());
         rinfo.put("data", info.getData());
         rinfo.put("groupID", info.getGroupID());
         rinfo.put("inviteeList", info.getInviteeList());
         rinfo.put("inviteID", info.getInviteID());
         rinfo.put("inviter", info.getInviter());
         rinfo.put("timeout", info.getTimeout());
-        if (info.getOfflinePushInfo() != null)
-            rinfo.put("offlinePushInfo", CommonUtils.converV2TIMOfflinePushInfoToMap(info.getOfflinePushInfo()));
+        // if (info.getOfflinePushInfo() != null)
+        //     rinfo.put("offlinePushInfo", CommonUtils.converV2TIMOfflinePushInfoToMap(info.getOfflinePushInfo()));
         return rinfo;
     }
 
@@ -1321,6 +1458,22 @@ public class CommonUtils {
         rinfo.put("name", info.getName());
         return rinfo;
     }
+
+    public static HashMap<String,Object>  convertV2TIMMessageExtensionResultToMap(V2TIMMessageExtensionResult status){
+      HashMap<String,Object> rinfo = new HashMap<String,Object>();
+      rinfo.put("resultCode",status.getResultCode());
+      rinfo.put("resultInfo",status.getResultInfo());
+      rinfo.put("extension",CommonUtils.convertV2TIMMessageExtensionToMap(status.getExtension()));
+      return  rinfo;
+    }
+    public static HashMap<String,Object>  convertV2TIMMessageExtensionToMap(V2TIMMessageExtension status){
+      HashMap<String,Object> rinfo = new HashMap<String,Object>();
+      rinfo.put("extensionKey",status.getExtensionKey());
+      rinfo.put("extensionValue",status.getExtensionValue());
+      return  rinfo;
+    }
+
+
 
     public static @Nullable Integer safeGetInt(ReadableMap arguments, String key) {
         try {

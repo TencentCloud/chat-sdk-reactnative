@@ -473,7 +473,7 @@ export class V2TimGroupManager {
         isSearchMemberNameCard?: boolean;
     }): Promise<
         V2TimValueCallback<{
-            groupMemberSearchResultItems: StringMap;
+            [key: string]: V2TimGroupMemberFullInfo[];
         }>
     > {
         return this.nativeModule.call(this.manager, 'searchGroupMembers', {

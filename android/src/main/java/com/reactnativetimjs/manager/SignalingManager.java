@@ -270,9 +270,9 @@ public class SignalingManager {
         if (info.get("actionType") != null) {
             param.setActionType((Integer) info.get("actionType"));
         }
-        if (info.get("businessID") != null) {
-            param.setBusinessID((Integer) info.get("businessID"));
-        }
+        // if (info.get("businessID") != null) {
+        //     param.setBusinessID((Integer) info.get("businessID"));
+        // }
         V2TIMManager.getSignalingManager().addInvitedSignaling(param, new V2TIMCallback() {
             @Override
             public void onSuccess() {

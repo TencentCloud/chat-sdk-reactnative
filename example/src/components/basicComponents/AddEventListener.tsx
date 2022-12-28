@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { TencentImSDKPlugin } from 'react-native-tim-js';
 import CommonButton from '../commonComponents/CommonButton';
 import { CallBackContext } from '../../useContext';
+import type { V2TimGroupListener } from 'lib/typescript/src';
 
 const AddEventListenerComponent = () => {
     const { setCallbackData } = useContext(CallBackContext);
@@ -53,7 +54,19 @@ const AddEventListenerComponent = () => {
             setCallbackData(res);
         },
     };
-    const groupListenerObj = {
+    const groupListenerObj: V2TimGroupListener = {
+        onTopicCreated: (groupID, topicID) => {
+            console.log(groupID);
+            console.log(topicID);
+        },
+        onTopicDeleted: (groupID, topicIDList) => {
+            console.log(groupID);
+            console.log(topicIDList);
+        },
+        onTopicInfoChanged: (groupID, topicInfo) => {
+            console.log(groupID);
+            console.log(topicInfo);
+        },
         onMemberEnter: (groupID, memberList) => {
             const res = {
                 type: 'onMemberEnter',
@@ -348,6 +361,37 @@ const AddEventListenerComponent = () => {
             };
             setCallbackData(res);
         },
+        onRecvMessageExtensionsChanged: (msgID, extensions) => {
+            const res = {
+                type: 'onRecvMessageExtensionsChanged',
+                data: {
+                    msgID: msgID,
+                    extensions: extensions,
+                },
+            };
+            console.log(res, 'onRecvMessageExtensionsChanged');
+            setCallbackData(res);
+        },
+        onRecvMessageExtensionsDeleted: (msgID, extensionKeys) => {
+            const res = {
+                type: 'onRecvMessageExtensionsDeleted',
+                data: {
+                    msgID: msgID,
+                    extensionKeys: extensionKeys,
+                },
+            };
+            console.log(res, 'onRecvMessageExtensionsDeleted');
+            setCallbackData(res);
+        },
+        onMessageDownloadProgressCallback: (messageProgress) => {
+            const res = {
+                type: 'onMessageDownloadProgressCallback',
+                data: {
+                    messageProgress: messageProgress,
+                },
+            };
+            setCallbackData(res);
+        },
     };
     const conversationListenerObj = {
         onSyncServerStart: () => {
@@ -482,6 +526,7 @@ const AddEventListenerComponent = () => {
         await TencentImSDKPlugin.v2TIMManager
             .getSignalingManager()
             .addSignalingListener(signalingListenerObj);
+        console.log('addSuccess');
     };
     const removeSimpleMsgListener = () => {
         TencentImSDKPlugin.v2TIMManager.removeSimpleMsgListener(

@@ -1,7 +1,0 @@
-type: api
-group: V2TIMManager
-name: createGroup 
-features: 创建群组
-version: 1.1.1
-ignore: true
-deprecated: 简单创建群组自3.6.0开始弃用，请使用groupManager下的高级创建群组,此接口将在以后版本中被删除

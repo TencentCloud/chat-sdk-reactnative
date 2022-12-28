@@ -441,7 +441,7 @@ class GroupManager {
 	}
 
 
-	 public func getJoinedCommunityList(param: [String: Any], resolve:@escaping RCTPromiseResolveBlock) {
+	public func getJoinedCommunityList(param: [String: Any], resolve:@escaping RCTPromiseResolveBlock) {
         V2TIMManager.sharedInstance().getJoinedCommunityList { infos in
             var dataList: [[String: Any]]  = [];
             infos?.forEach({ info_item in
@@ -484,16 +484,56 @@ class GroupManager {
             CommonUtils.resultFailed(desc: desc, code: code, method: "deleteTopicFromCommunity",resolve: resolve)
         }
     }
-    public func setTopicInfo(param: [String: Any], resolve:@escaping RCTPromiseResolveBlock) {
-        let topicInfo = param["topicInfo"] as? [String:Any] ;
-        let info = V2TIMTopicInfoEntity.init(dict: topicInfo!);
-        
-        V2TIMManager.sharedInstance().setTopicInfo(info) {
-            CommonUtils.resultSuccess(method: "setTopicInfo", resolve: resolve);
-        } fail: { code, desc in
-            CommonUtils.resultFailed(desc: desc, code: code, method: "setTopicInfo",resolve: resolve)
+
+	public func setTopicInfo(param: [String: Any], resolve:@escaping RCTPromiseResolveBlock) {
+        let groupID = param["groupID"] as! String ;
+        let topicInfo = param["topicInfo"] as! [String:Any];
+        if((topicInfo["topicID"]) != nil){
+            var IDList :[String] = [];
+            IDList.append(topicInfo["topicID"] as! String)
+            V2TIMManager.sharedInstance().getTopicInfoList(groupID, topicIDList: IDList) { res_list in
+                if(res_list?.count == 1){
+                    let info_native = res_list?[0] as? V2TIMTopicInfoResult;
+                    
+                    if(info_native?.errorCode == 0){
+                        let tinfo = info_native?.topicInfo;
+                        print(topicInfo)
+                        if(topicInfo["topicName"] as? String != nil){
+                            tinfo?.topicName = topicInfo["topicName"] as! String
+                        }
+                        if(topicInfo["topicFaceUrl"] as? String != nil){
+                            tinfo?.topicFaceURL = topicInfo["topicFaceUrl"] as! String
+                        }
+                        if(topicInfo["notification"] as? String != nil){
+                            tinfo?.notification = topicInfo["notification"] as! String
+                        }
+                        if(topicInfo["isAllMute"] as? Bool != nil){
+                            tinfo?.isAllMuted = topicInfo["isAllMute"] as! Bool
+                        }
+                        if(topicInfo["customString"] as? String != nil){
+                            tinfo?.customString = topicInfo["customString"] as! String
+                        }
+                        if(topicInfo["draftText"] as? String != nil){
+                            tinfo?.draftText = topicInfo["draftText"] as! String
+                        }
+                        if(topicInfo["introduction"] as? String != nil){
+                            tinfo?.introduction = topicInfo["introduction"] as! String
+                        }
+                        V2TIMManager.sharedInstance().setTopicInfo(tinfo) {
+							CommonUtils.resultSuccess(method: "setTopicInfo", resolve: resolve);
+                        } fail: { code, desc in
+							CommonUtils.resultFailed(desc: desc, code: code, method: "setTopicInfo",resolve: resolve)
+                        }
+                    }else{
+						CommonUtils.resultFailed(desc: info_native?.errorMsg, code: info_native?.errorCode, method: "setTopicInfo",resolve: resolve)
+                    }
+                }else {
+                    CommonUtils.resultFailed(desc: "topic not found", code: -1, method: "setTopicInfo",resolve: resolve)
+                }
+            } fail: { code, desc in
+                CommonUtils.resultFailed(desc: desc, code: code, method: "setTopicInfo",resolve: resolve)
+            }
         }
-        
     }
     
     public func getTopicInfoList(param: [String: Any], resolve:@escaping RCTPromiseResolveBlock) {
@@ -508,8 +548,10 @@ class GroupManager {
                 
                 var _item:[String:Any] = [:];
                 _item["errorCode"] = i?.errorCode as Any?
-                _item["errorMsg"] = i?.errorMsg as Any?
-                _item["topicInfo"] = V2TIMTopicInfoEntity.getDict(info: i!.topicInfo)
+                _item["errorMsg"] = i?.errorMsg as Any? ?? ""
+				do {
+                    _item["topicInfo"] =  V2TIMTopicInfoEntity.getDict(info: i!.topicInfo)
+                } 
                 list.append(_item)
             })
             CommonUtils.resultSuccess(method: "getTopicInfoList", resolve: resolve, data:list);

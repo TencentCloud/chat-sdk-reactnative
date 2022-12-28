@@ -7,6 +7,7 @@ class MessageManager {
 
     // 存放创建出的临时消息
     var messageDict =  [String: V2TIMMessage]()
+    var downloadingMessageList:[String] = [];
 	
      func clearMessageMap(id:String? = nil){
         if( id != nil){
@@ -97,7 +98,7 @@ class MessageManager {
                     let customElem:[String:Any] = message?["customElem"] as! [String : Any];
                     messages?[0].customElem.data = (customElem["data"] as? String)?.data(using: .utf8)
                     messages?[0].customElem.desc = customElem["desc"]  as? String
-                    messages?[0].customElem.extension = customElem["extension"] as? String ;
+                    messages?[0].customElem.ext = customElem["extension"] as? String ;
                 }
                 
                 async({
@@ -211,7 +212,7 @@ class MessageManager {
 			async({
 				_ -> Dictionary<String, Any> in
 				
-				let ret = try Hydra.await(V2MessageEntity.init(message: message).getDictAll())
+				let ret = V2MessageEntity.init(message: message).getDict()
 				return ret
             }).then({
                         var _data = $0;
@@ -236,7 +237,7 @@ class MessageManager {
 			async({
 				_ -> Dictionary<String, Any> in
 				
-				let ret = try Hydra.await(V2MessageEntity.init(message: message).getDictAll())
+				let ret = V2MessageEntity.init(message: message).getDict()
 				return ret
 			}).then({
                 var _data = $0;
@@ -337,7 +338,7 @@ class MessageManager {
 											_ -> Int in
 											for i in msgList! {
 
-												messageList.append(try Hydra.await(V2MessageEntity.init(message: i).getDictAll()))
+												messageList.append(V2MessageEntity.init(message: i).getDict())
 											}
 											CommonUtils.resultSuccess(method: "downloadMergerMessage", resolve: resolve, data: messageList)
 
@@ -464,7 +465,7 @@ class MessageManager {
 				
 				for i in msgs! {
 					
-					messageList.append(try Hydra.await(V2MessageEntity.init(message: i).getDictAll()))
+					messageList.append(V2MessageEntity.init(message: i).getDict())
 				}
 				CommonUtils.resultSuccess(method: method, resolve: resolve, data: messageList)
 				
@@ -534,7 +535,7 @@ class MessageManager {
 			async({ _ -> Int in
 				for i in msgs! {
 
-					messageList.append(try Hydra.await(V2MessageEntity.init(message: i).getDictAll()))
+					messageList.append(V2MessageEntity.init(message: i).getDict())
 				}
 				CommonUtils.resultSuccess(method: method, resolve: resolve, data: messageList)
 
@@ -576,7 +577,7 @@ class MessageManager {
 				
 				for i in msgs ?? [] {
 					
-					messageList.append(try Hydra.await(V2MessageEntity.init(message: i).getDictAll()))
+					messageList.append(V2MessageEntity.init(message: i).getDict())
 				}
 				CommonUtils.resultSuccess(method: method, resolve: resolve, data: messageList)
 				
@@ -810,6 +811,9 @@ class MessageManager {
 		if let data = param["isExcludedFromLastMessage"] as? Bool {
             message.isExcludedFromLastMessage = data;
         }
+        if let data = param["isSupportMessageExtension"] as? Bool {
+            message.supportMessageExtension = data;
+        }
         if let data = param["needReadReceipt"] as? Bool {
             message.needReadReceipt = data;
         }
@@ -925,7 +929,7 @@ class MessageManager {
                     
                     for i in msgs! {
                         
-                        messageList.append(try Hydra.await(V2MessageEntity.init(message: i).getDictAll()))
+                        messageList.append(V2MessageEntity.init(message: i).getDict())
                     }
                     CommonUtils.resultSuccess(method: "findMessages", resolve: resolve, data: messageList) 
                     return 1
@@ -935,6 +939,238 @@ class MessageManager {
             }, fail: TencentImUtils.returnErrorClosures(method: "findMessages", resolve: resolve))
 		}
 	}
+    
+    func getMessageOnlineUrl(param: [String: Any], resolve: @escaping RCTPromiseResolveBlock){
+        let allowList:[Int] = [V2TIMElemType.ELEM_TYPE_IMAGE.rawValue,V2TIMElemType.ELEM_TYPE_FILE.rawValue,V2TIMElemType.ELEM_TYPE_SOUND.rawValue,V2TIMElemType.ELEM_TYPE_VIDEO.rawValue];
+        let msgID = param["msgID"] as? String;
+        V2TIMManager.sharedInstance()?.findMessages([msgID!]){message in
+            if(message?.count == 1){
+                let msg:V2TIMMessage = message![0]
+                var res:[String:[String:Any]] = [:];
+                if(allowList.contains(msg.elemType.rawValue) && msg.msgID == msgID){
+                    if(msg.elemType == V2TIMElemType.ELEM_TYPE_IMAGE){
+                        res["imageElem"] = V2MessageEntity.init(message: msg).convertImageMessageElem(imageElem: msg.imageElem)
+                        CommonUtils.resultSuccess(method: "getMessageOnlineUrl", resolve: resolve, data: res)
+                        }else if(msg.elemType == V2TIMElemType.ELEM_TYPE_VIDEO){
+                            var video:[String:Any] = V2MessageEntity.init(message: msg).convertVideoMessageElem(videoElem: msg.videoElem) ;
+                            async({
+                                            _ -> Int in
+                                video["videoUrl"] = try Hydra.await(V2MessageEntity.init(message: msg).getVideoUrl(msg))
+                                video["snapshotUrl"] = try Hydra.await(V2MessageEntity.init(message: msg).getSnapshotUrl(msg))
+                                            res["videoElem"] = video
+                                CommonUtils.resultSuccess(method: "getMessageOnlineUrl", resolve: resolve, data: res)
+                                            return 1
+                                        }).then({
+                                            value in
+                                        })
+                        }else if(msg.elemType == V2TIMElemType.ELEM_TYPE_SOUND){
+                            var sound:[String:Any] = V2MessageEntity.init(message: msg).convertSoundMessageElem(soundElem: msg.soundElem);
+                            async({
+                                            _ -> Int in
+                                sound["url"] = try Hydra.await(V2MessageEntity.init(message: msg).getUrl(msg))
+                                            res["soundElem"] = sound
+                                CommonUtils.resultSuccess(method: "getMessageOnlineUrl", resolve: resolve, data: res)
+                                            return 1
+                                        }).then({
+                                            value in
+                                        })
+                        }else if(msg.elemType == V2TIMElemType.ELEM_TYPE_FILE){
+                            var file:[String:Any] = V2MessageEntity.init(message: msg).convertFileElem(fileElem:  msg.fileElem);
+                            async({
+                                            _ -> Int in
+                                file["url"] = try Hydra.await(V2MessageEntity.init(message: msg).getFileUrl(msg))
+                                            res["fileElem"] = file
+                                CommonUtils.resultSuccess(method: "getMessageOnlineUrl", resolve: resolve, data: res)
+                                            return 1
+                                        }).then({
+                                            value in
+                                        })
+                        }
+                }else {
+                    CommonUtils.resultFailed(desc: "message invalid", code: -1, method: "getMessageOnlineUrl", resolve: resolve)
+                }
+            }else{
+                CommonUtils.resultFailed(desc: "message not found", code: -1, method: "getMessageOnlineUrl", resolve: resolve)
+            }
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, method: "getMessageOnlineUrl", resolve: resolve)
+        }
+    }
+    
+    func sendDownloadProgress(_ isFinish:Bool, _ isError:Bool, _ currentSize:Int, _ totalSize:Int,  _ msgID:String,_ type:Int,_ isSnapshot:Bool,_ path:String,_ error_code:Int32,_ error_desc:String?){
+        
+        if(isFinish){
+            let downloadKey = msgID + (isSnapshot ? "_1" : "_0");
+            
+            self.downloadingMessageList.removeAll { item in
+                return item == downloadKey;
+            }
+        }
+        
+        CommonUtils.emmitEvent(eventName: "messageListener", eventType: ListenerType.onMessageDownloadProgressCallback, data: ["isFinish": isFinish, "isError":isError,"currentSize":currentSize,"totalSize":totalSize,"msgID":msgID,"type":type,"isSnapshot":isSnapshot,"path":path,"errorCode":error_code,"errorDesc":error_desc ?? ""]);
+    }
+    
+    func downloadMessage(param: [String: Any], resolve: @escaping RCTPromiseResolveBlock){
+        let msgID = param["msgID"] as? String;
+        let imageType = (CommonUtils.changeToIos(type:param["imageType"] as? Int ?? 0));
+        let isSnapshot = param["isSnapshot"] as? Bool ?? false;
+        let allowList:[Int] = [V2TIMElemType.ELEM_TYPE_IMAGE.rawValue,V2TIMElemType.ELEM_TYPE_FILE.rawValue,V2TIMElemType.ELEM_TYPE_SOUND.rawValue,V2TIMElemType.ELEM_TYPE_VIDEO.rawValue];
+        let downloadKey = msgID! + (isSnapshot ? "_1" : "_0");
+        
+        if(self.downloadingMessageList.contains(downloadKey)){
+            CommonUtils.resultFailed(desc: "The message is downloading", code: -1, method: "downloadMessage", resolve: resolve)
+            return;
+        }
+        
+        V2TIMManager.sharedInstance()?.findMessages([msgID!]) { message in
+                    if(message?.count == 1){
+                        let msg:V2TIMMessage = message![0]
+                        if(allowList.contains(msg.elemType.rawValue) && msg.msgID == msgID){
+                            
+                            self.downloadingMessageList.append(downloadKey);
+                            CommonUtils.resultSuccess(method: "downloadMessage", resolve: resolve)
+                            if(msg.elemType == V2TIMElemType.ELEM_TYPE_IMAGE){
+                                V2MessageEntity.init(message: msg).downloadImageMessage(msgID!, msg.imageElem, imageType, DownloadCallback(onProgress: { isFinish, isError, currentSize, totalSize, msgID, type, isSnapshot, path ,error_code,error_desc in
+                                    self.sendDownloadProgress(isFinish,isError,currentSize,totalSize,msgID,type,isSnapshot,path,error_code,error_desc)
+                                }))
+                            }else if(msg.elemType == V2TIMElemType.ELEM_TYPE_VIDEO){
+                                V2MessageEntity.init(message: msg).downloadVideoMessage(msgID!, msg.videoElem, isSnapshot, DownloadCallback(onProgress: { isFinish, isError, currentSize, totalSize, msgID, type, isSnapshot, path,error_code,error_desc in
+                                    self.sendDownloadProgress(isFinish,isError,currentSize,totalSize,msgID,type,isSnapshot,path,error_code,error_desc)
+                                }))
+                            }else if(msg.elemType == V2TIMElemType.ELEM_TYPE_SOUND){
+                                V2MessageEntity.init(message: msg).downloadSoundMessage(msgID!, msg.soundElem, DownloadCallback(onProgress: { isFinish, isError, currentSize, totalSize, msgID, type, isSnapshot, path,error_code,error_desc in
+                                    self.sendDownloadProgress(isFinish,isError,currentSize,totalSize,msgID,type,isSnapshot,path,error_code,error_desc)
+                                }))
+                            }else if(msg.elemType == V2TIMElemType.ELEM_TYPE_FILE){
+                                V2MessageEntity.init(message: msg).downloadFileMessage(msgID!, msg.fileElem, DownloadCallback(onProgress: { isFinish, isError, currentSize, totalSize, msgID, type, isSnapshot, path,error_code,error_desc in
+                                    self.sendDownloadProgress(isFinish,isError,currentSize,totalSize,msgID,type,isSnapshot,path,error_code,error_desc)
+                                }))
+                            }
+                        }else{
+                            CommonUtils.resultFailed(desc: "message invalid", code: -1, method: "downloadMessage", resolve: resolve)
+                        }
+                    }else{
+                        CommonUtils.resultFailed(desc: "message not found", code: -1, method: "downloadMessage", resolve: resolve)
+                    }
+                } fail: { code, desc in
+                    CommonUtils.resultFailed(desc: desc, code: code, method: "downloadMessage", resolve: resolve)
+                }
+    }
+    
+    func setMessageExtensions(param: [String: Any], resolve: @escaping RCTPromiseResolveBlock){
+        let msgID = param["msgID"] as? String;
+        let extensions = param["extensions"] as? [[String:String]] ?? [];
+        var exList:[V2TIMMessageExtension] = [];
+        for item:[String:String] in extensions {
+            let key:String = item["extensionKey"] ?? "";
+            let value:String = item["extensionValue"] ?? ""
+            if(key.isEmpty || value.isEmpty){
+                continue;
+            }
+            let ex:V2TIMMessageExtension = V2TIMMessageExtension();
+            ex.extensionKey = key;
+            ex.extensionValue = value;
+            exList.append(ex);
+        }
+        
+        V2TIMManager.sharedInstance().findMessages([msgID ?? ""]) { messageList in
+            if(messageList?.count == 1){
+                let cumessage:V2TIMMessage = (messageList?.first)!;
+                print(cumessage)
+                if(cumessage.supportMessageExtension && cumessage.status.rawValue == 2){
+                    V2TIMManager.sharedInstance().setMessageExtensions(cumessage, extensions: exList) { extResList in
+                        var resList = [[String:Any]]();
+                        for res:V2TIMMessageExtensionResult in extResList ?? [] {
+                            var resItem = [String: Any]();
+                            resItem["resultCode"] = res.resultCode as Any;
+                            resItem["resultInfo"] = res.resultInfo as Any;
+                            var extentionDict = [String:String]();
+                            extentionDict["extensionKey"] = res.ext.extensionKey;
+                            extentionDict["extensionValue"] = res.ext.extensionValue;
+                            resItem["extension"] = extentionDict;
+                            resList.append(resItem);
+                        }
+                        CommonUtils.resultSuccess(method: "setMessageExtensions", resolve: resolve, data: resList)
+                    } fail: { code, desc in
+                        CommonUtils.resultFailed(desc: desc, code: code, method: "setMessageExtensions", resolve: resolve)
+                    }
+                }else{
+                    CommonUtils.resultFailed(desc: "msg info error", code: -1, method: "setMessageExtensions", resolve: resolve)
+                }
+            }else{
+                CommonUtils.resultFailed(desc: "msg is not exist", code: -1, method: "setMessageExtensions", resolve: resolve)
+            }
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, method: "setMessageExtensions", resolve: resolve)
+        }
+        
+    }
+    
+    func getMessageExtensions(param: [String: Any], resolve: @escaping RCTPromiseResolveBlock){
+        let msgID = param["msgID"] as? String;
+        V2TIMManager.sharedInstance().findMessages([msgID ?? ""]) { messageList in
+            if(messageList?.count == 1){
+                let cumessage:V2TIMMessage = (messageList?.first)!;
+                if(cumessage.supportMessageExtension && cumessage.status.rawValue == 2){
+                    V2TIMManager.sharedInstance().getMessageExtensions(cumessage) { extList in
+                        var resList = [[String:Any]]();
+                        for res:V2TIMMessageExtension in extList ?? [] {
+                            var resItem = [String: Any]();
+                            resItem["extensionKey"] = res.extensionKey as Any;
+                            resItem["extensionValue"] = res.extensionValue as Any;
+                            resList.append(resItem);
+                        }
+                        CommonUtils.resultSuccess(method: "setMessageExtensions", resolve: resolve, data: resList)
+                    } fail: { code, desc in
+                        CommonUtils.resultFailed(desc: desc, code: code, method: "getMessageExtensions", resolve: resolve)
+                    }
+                }else{
+                    CommonUtils.resultFailed(desc: "msg info error", code: -1, method: "getMessageExtensions", resolve: resolve)
+                }
+            }else{
+                CommonUtils.resultFailed(desc: "msg is not exist", code: -1, method: "getMessageExtensions", resolve: resolve)
+            }
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, method: "getMessageExtensions", resolve: resolve)
+        }
+    }
+    
+    func deleteMessageExtensions(param: [String: Any], resolve: @escaping RCTPromiseResolveBlock){
+        let msgID = param["msgID"] as? String;
+        let keys = param["keys"] as? [String] ?? [];
+        V2TIMManager.sharedInstance().findMessages([msgID ?? ""]) { messageList in
+            if(messageList?.count == 1){
+                let cumessage:V2TIMMessage = (messageList?.first)!;
+                if(cumessage.supportMessageExtension && cumessage.status.rawValue == 2){
+                    V2TIMManager.sharedInstance().deleteMessageExtensions(cumessage, keys: keys) { extResList in
+                        var resList = [[String:Any]]();
+                        for res:V2TIMMessageExtensionResult in extResList ?? [] {
+                            var resItem = [String: Any]();
+                            resItem["resultCode"] = res.resultCode as Any;
+                            resItem["resultInfo"] = res.resultInfo as Any;
+                            var extentionDict = [String:String]();
+                            extentionDict["extensionKey"] = res.ext.extensionKey;
+                            extentionDict["extensionValue"] = res.ext.extensionValue;
+                            resItem["extension"] = extentionDict;
+                            resList.append(resItem);
+                        }
+                        CommonUtils.resultSuccess(method: "deleteMessageExtensions", resolve: resolve, data: resList)
+                    } fail: { code, desc in
+                        CommonUtils.resultFailed(desc: desc, code: code, method: "deleteMessageExtensions", resolve: resolve)
+                    }
+
+                }else{
+                    CommonUtils.resultFailed(desc: "msg info error", code: -1, method: "deleteMessageExtensions", resolve: resolve)
+                }
+            }else{
+                CommonUtils.resultFailed(desc: "msg is not exist", code: -1, method: "deleteMessageExtensions", resolve: resolve)
+            }
+        } fail: { code, desc in
+            CommonUtils.resultFailed(desc: desc, code: code, method: "deleteMessageExtensions", resolve: resolve)
+        }
+    }
+    
+    
 
 	public func addAdvancedMsgListener(param: [String: Any], resolve: @escaping RCTPromiseResolveBlock) {
 		V2TIMManager.sharedInstance()?.addAdvancedMsgListener(listener: advancedMessageListener)

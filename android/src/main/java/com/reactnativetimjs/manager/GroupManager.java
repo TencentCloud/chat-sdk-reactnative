@@ -288,44 +288,71 @@ public class GroupManager {
     public void setTopicInfo(Promise promise, ReadableMap arguments) {
         Map<String, Object> topicInfo = CommonUtils
                 .convertReadableMapToHashMap(CommonUtils.safeGetMap(arguments, "topicInfo"));
-        V2TIMTopicInfo info = new V2TIMTopicInfo();
+        String groupID = arguments.getString("groupID");
+
         if (topicInfo.get("topicID") != null) {
-            info.setTopicID((String) topicInfo.get("topicID"));
-        }
-        if (topicInfo.get("topicName") != null) {
-            info.setTopicName((String) topicInfo.get("topicName"));
-        }
-        if (topicInfo.get("topicFaceUrl") != null) {
-            info.setTopicFaceUrl((String) topicInfo.get("topicFaceUrl"));
-        }
-        if (topicInfo.get("notification") != null) {
-            info.setNotification((String) topicInfo.get("notification"));
-        }
-        if (topicInfo.get("isAllMute") != null) {
-            info.setAllMute((Boolean) topicInfo.get("isAllMute"));
+            List<String> topicIDList = new LinkedList();
+            topicIDList.add((String) topicInfo.get("topicID"));
+            V2TIMManager.getGroupManager().getTopicInfoList(groupID, topicIDList,
+                    new V2TIMValueCallback<List<V2TIMTopicInfoResult>>() {
+                        @Override
+                        public void onSuccess(List<V2TIMTopicInfoResult> v2TIMTopicInfoResults) {
+                            if (v2TIMTopicInfoResults.size() == 1) {
+                                System.out.println("有合适的topic");
+                                V2TIMTopicInfoResult res = v2TIMTopicInfoResults.get(0);
+                                if (res.getErrorCode() == 0) {
+                                    System.out.println("code 也是对的");
+                                    V2TIMTopicInfo topicInfo_native = res.getTopicInfo();
+                                    System.out.println(topicInfo);
+                                    if (topicInfo.get("topicName") != null) {
+                                        topicInfo_native.setTopicName((String) topicInfo.get("topicName"));
+                                    }
+                                    if (topicInfo.get("topicFaceUrl") != null) {
+                                        topicInfo_native.setTopicFaceUrl((String) topicInfo.get("topicFaceUrl"));
+                                    }
+                                    if (topicInfo.get("notification") != null) {
+                                        topicInfo_native.setNotification((String) topicInfo.get("notification"));
+                                    }
+                                    if (topicInfo.get("isAllMute") != null) {
+                                        topicInfo_native.setAllMute((Boolean) topicInfo.get("isAllMute"));
+                                    }
+
+                                    if (topicInfo.get("customString") != null) {
+                                        topicInfo_native.setCustomString((String) topicInfo.get("customString"));
+                                    }
+
+                                    if (topicInfo.get("draftText") != null) {
+                                        topicInfo_native.setDraft((String) topicInfo.get("draftText"));
+                                    }
+                                    if (topicInfo.get("introduction") != null) {
+                                        topicInfo_native.setIntroduction((String) topicInfo.get("introduction"));
+                                    }
+                                    V2TIMManager.getGroupManager().setTopicInfo(topicInfo_native, new V2TIMCallback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            CommonUtils.returnSuccess(promise, null);
+                                        }
+
+                                        @Override
+                                        public void onError(int i, String s) {
+                                            CommonUtils.returnError(promise, i, s);
+                                        }
+                                    });
+                                } else {
+                                    CommonUtils.returnError(promise, res.getErrorCode(), res.getErrorMessage());
+                                }
+                            } else {
+                                CommonUtils.returnError(promise, -1, "topic not found");
+                            }
+                        }
+
+                        @Override
+                        public void onError(int i, String s) {
+                            CommonUtils.returnError(promise, i, s);
+                        }
+                    });
         }
 
-        if (topicInfo.get("customString") != null) {
-            info.setCustomString((String) topicInfo.get("customString"));
-        }
-
-        if (topicInfo.get("draftText") != null) {
-            info.setDraft((String) topicInfo.get("draftText"));
-        }
-        if (topicInfo.get("introduction") != null) {
-            info.setIntroduction((String) topicInfo.get("introduction"));
-        }
-        V2TIMManager.getGroupManager().setTopicInfo(info, new V2TIMCallback() {
-            @Override
-            public void onSuccess() {
-                CommonUtils.returnSuccess(promise, null);
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                CommonUtils.returnError(promise, i, s);
-            }
-        });
     }
 
     public void getTopicInfoList(Promise promise, ReadableMap arguments) {

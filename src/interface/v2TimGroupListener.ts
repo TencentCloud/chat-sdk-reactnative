@@ -5,6 +5,7 @@ import type { StringMap } from './commonInterface';
 import type { V2TimGroupChangeInfo } from './v2TimGroupChangeInfo';
 import type { V2TimGroupMemberChangeInfo } from './v2TimGroupMemberChangeInfo';
 import type { V2TimGroupMemberInfo } from './v2TimGroupMemberInfo';
+import type { V2TimTopicInfo } from './v2TimTopicInfo';
 
 export interface V2TimGroupListener {
     onMemberEnter?: (
@@ -60,4 +61,7 @@ export interface V2TimGroupListener {
         groupID: string,
         groupAttribute: StringMap
     ) => void;
+    onTopicCreated?: (groupID: string, topicID: string) => void;
+    onTopicDeleted?: (groupID: string, topicIDList: string[]) => void;
+    onTopicInfoChanged?: (groupID: string, topicInfo: V2TimTopicInfo) => void;
 }

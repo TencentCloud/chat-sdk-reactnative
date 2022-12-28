@@ -244,6 +244,21 @@ export class V2TIMManager {
                             data.groupAttributeMap
                         );
                     break;
+                case 'onTopicCreated':
+                    listener.onTopicCreated &&
+                        listener.onTopicCreated(data.groupID, data.topicID);
+                    break;
+                case 'onTopicInfoChanged':
+                    listener.onTopicInfoChanged &&
+                        listener.onTopicInfoChanged(
+                            data.groupID,
+                            data.topicInfo
+                        );
+                    break;
+                case 'onTopicDeleted':
+                    listener.onTopicDeleted &&
+                        listener.onTopicDeleted(data.groupID, data.topicIDList);
+                    break;
             }
         });
     }

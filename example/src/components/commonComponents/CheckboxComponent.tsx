@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import BouncyCheckboxGroup, { ICheckboxButton } from 'react-native-bouncy-checkbox-group';
+import React, { useState, useEffect } from 'react';
+import BouncyCheckboxGroup, {
+    ICheckboxButton,
+} from 'react-native-bouncy-checkbox-group';
 import { TencentImSDKPlugin } from 'react-native-tim-js';
-
 
 const styles = {
     textStyle: { textDecorationLine: 'none' },
@@ -10,78 +11,98 @@ const styles = {
         width: 20,
         borderRadius: 5,
         borderColor: '#c0c0c0',
-        margin: 5
-    }
-}
-
+        margin: 5,
+    },
+};
 
 const CheckboxComponent = (props) => {
-    const [checkboxData, setCheckboxData] = useState<any>([])
-    const { getSelect, type, getType, groupID, conversationID, getApplicationInfo } = props
+    const [checkboxData, setCheckboxData] = useState<any>([]);
+    const {
+        getSelect,
+        type,
+        getType,
+        groupID,
+        conversationID,
+        getApplicationInfo,
+        getSource,
+    } = props;
 
     const setSelectedHandler = (val) => {
         if (val.type) {
-            getType(val.type)
+            getType(val.type);
         }
         if (val.info) {
-            getApplicationInfo(val.info)
+            getApplicationInfo(val.info);
         }
-        getSelect(val.text)
-    }
+        if (val.source && getSource) {
+            getSource(val.source);
+        }
+        getSelect(val.text);
+    };
     useEffect(() => {
         switch (type) {
             case 'friend':
-                getFriendList()
+                getFriendList();
                 break;
             case 'group':
-                getGroupList()
+                getGroupList();
                 break;
             case 'friendapplication':
-                getFriendApplicationList()
+                getFriendApplicationList();
                 break;
             case 'selectgroup':
-                getFriendGroupList()
+                getFriendGroupList();
                 break;
             case 'member':
-                getMemberList()
+                getMemberList();
                 break;
             case 'conversation':
-                getConversationList()
+                getConversationList();
                 break;
             case 'message':
-                getMessageList()
+                getMessageList();
                 break;
             case 'application':
-                getApplicationList()
+                getApplicationList();
+                break;
+            case 'community':
+                getJoinedCommunityList();
+                break;
+            case 'topic':
+                getTopicList();
                 break;
             default:
                 break;
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    }, [])
-
-    const getFriendList = async () => {
-        const res = await TencentImSDKPlugin.v2TIMManager.getFriendshipManager().getFriendList()
-        const dataArr: any = []
+    const getTopicList = async () => {
+        const res = await TencentImSDKPlugin.v2TIMManager
+            .getGroupManager()
+            .getTopicInfoList(groupID, []);
+        const dataArr: any = [];
         if (res.code === 0) {
             res.data?.forEach((val, index) => {
                 dataArr.push({
                     id: index,
-                    text: `userID: ${val.userID}`,
+                    text: `topicName: ${val.topicInfo?.topicName}`,
                     fillColor: '#2F80ED',
                     unfillColor: 'white',
                     textStyle: styles.textStyle,
-                    iconStyle: styles.iconStyle
-                })
-            })
+                    iconStyle: styles.iconStyle,
+                    source: val.topicInfo,
+                });
+            });
         }
-        setCheckboxData(dataArr)
+        setCheckboxData(dataArr);
+    };
 
-    }
-
-    const getGroupList = async () => {
-        const res = await TencentImSDKPlugin.v2TIMManager.getGroupManager().getJoinedGroupList()
-        const dataArr: any = []
+    const getJoinedCommunityList = async () => {
+        const res = await TencentImSDKPlugin.v2TIMManager
+            .getGroupManager()
+            .getJoinedCommunityList();
+        const dataArr: any = [];
         if (res.code === 0) {
             res.data?.forEach((val, index) => {
                 dataArr.push({
@@ -90,17 +111,58 @@ const CheckboxComponent = (props) => {
                     fillColor: '#2F80ED',
                     unfillColor: 'white',
                     textStyle: styles.textStyle,
-                    iconStyle: styles.iconStyle
-                })
-            })
+                    iconStyle: styles.iconStyle,
+                });
+            });
         }
-        setCheckboxData(dataArr)
+        setCheckboxData(dataArr);
+    };
 
-    }
+    const getFriendList = async () => {
+        const res = await TencentImSDKPlugin.v2TIMManager
+            .getFriendshipManager()
+            .getFriendList();
+        const dataArr: any = [];
+        if (res.code === 0) {
+            res.data?.forEach((val, index) => {
+                dataArr.push({
+                    id: index,
+                    text: `userID: ${val.userID}`,
+                    fillColor: '#2F80ED',
+                    unfillColor: 'white',
+                    textStyle: styles.textStyle,
+                    iconStyle: styles.iconStyle,
+                });
+            });
+        }
+        setCheckboxData(dataArr);
+    };
+
+    const getGroupList = async () => {
+        const res = await TencentImSDKPlugin.v2TIMManager
+            .getGroupManager()
+            .getJoinedGroupList();
+        const dataArr: any = [];
+        if (res.code === 0) {
+            res.data?.forEach((val, index) => {
+                dataArr.push({
+                    id: index,
+                    text: `groupID: ${val.groupID}`,
+                    fillColor: '#2F80ED',
+                    unfillColor: 'white',
+                    textStyle: styles.textStyle,
+                    iconStyle: styles.iconStyle,
+                });
+            });
+        }
+        setCheckboxData(dataArr);
+    };
 
     const getFriendApplicationList = async () => {
-        const res = await TencentImSDKPlugin.v2TIMManager.getFriendshipManager().getFriendApplicationList()
-        const dataArr: any = []
+        const res = await TencentImSDKPlugin.v2TIMManager
+            .getFriendshipManager()
+            .getFriendApplicationList();
+        const dataArr: any = [];
         if (res.code === 0) {
             res.data?.friendApplicationList?.forEach((val, index) => {
                 dataArr.push({
@@ -110,17 +172,19 @@ const CheckboxComponent = (props) => {
                     unfillColor: 'white',
                     textStyle: styles.textStyle,
                     iconStyle: styles.iconStyle,
-                    type: val.type
-                })
-            })
+                    type: val.type,
+                });
+            });
         }
-        setCheckboxData(dataArr)
-    }
+        setCheckboxData(dataArr);
+    };
 
     const getFriendGroupList = async () => {
-        const res = await TencentImSDKPlugin.v2TIMManager.getFriendshipManager().getFriendGroups()
-        const dataArr: any = []
-        console.log(res)
+        const res = await TencentImSDKPlugin.v2TIMManager
+            .getFriendshipManager()
+            .getFriendGroups();
+        const dataArr: any = [];
+        console.log(res);
         if (res.code === 0) {
             res.data?.forEach((val, index) => {
                 dataArr.push({
@@ -130,17 +194,18 @@ const CheckboxComponent = (props) => {
                     unfillColor: 'white',
                     textStyle: styles.textStyle,
                     iconStyle: styles.iconStyle,
-                })
-            })
+                });
+            });
         }
-        setCheckboxData(dataArr)
-    }
+        setCheckboxData(dataArr);
+    };
 
     const getMemberList = async () => {
-
-        const res = await TencentImSDKPlugin.v2TIMManager.getGroupManager().getGroupMemberList(groupID, 0, '0')
-        console.log(res)
-        const dataArr: any = []
+        const res = await TencentImSDKPlugin.v2TIMManager
+            .getGroupManager()
+            .getGroupMemberList(groupID, 0, '0');
+        console.log(res);
+        const dataArr: any = [];
         if (res.code === 0) {
             res.data?.memberInfoList?.forEach((val, index) => {
                 dataArr.push({
@@ -150,15 +215,17 @@ const CheckboxComponent = (props) => {
                     unfillColor: 'white',
                     textStyle: styles.textStyle,
                     iconStyle: styles.iconStyle,
-                })
-            })
+                });
+            });
         }
-        setCheckboxData(dataArr)
-    }
+        setCheckboxData(dataArr);
+    };
 
     const getConversationList = async () => {
-        const dataArr: any = []
-        const res = await TencentImSDKPlugin.v2TIMManager.getConversationManager().getConversationList(100, '0')
+        const dataArr: any = [];
+        const res = await TencentImSDKPlugin.v2TIMManager
+            .getConversationManager()
+            .getConversationList(100, '0');
         if (res.code === 0) {
             res.data?.conversationList?.forEach((val, index) => {
                 dataArr.push({
@@ -168,16 +235,18 @@ const CheckboxComponent = (props) => {
                     unfillColor: 'white',
                     textStyle: styles.textStyle,
                     iconStyle: styles.iconStyle,
-                })
-            })
+                });
+            });
         }
-        setCheckboxData(dataArr)
-    }
+        setCheckboxData(dataArr);
+    };
 
     const getMessageList = async () => {
-        const dataArr: any = []
-        const res = await TencentImSDKPlugin.v2TIMManager.getConversationManager().getConversationListByConversaionIds([conversationID])
-        console.log(res)
+        const dataArr: any = [];
+        const res = await TencentImSDKPlugin.v2TIMManager
+            .getConversationManager()
+            .getConversationListByConversaionIds([conversationID]);
+        console.log(res);
         if (res.code === 0) {
             res.data?.forEach((val, index) => {
                 if (val.lastMessage) {
@@ -188,16 +257,18 @@ const CheckboxComponent = (props) => {
                         unfillColor: 'white',
                         textStyle: styles.textStyle,
                         iconStyle: styles.iconStyle,
-                    })
+                    });
                 }
-            })
+            });
         }
-        setCheckboxData(dataArr)
-    }
+        setCheckboxData(dataArr);
+    };
 
     const getApplicationList = async () => {
-        const dataArr: any = []
-        const res = await TencentImSDKPlugin.v2TIMManager.getGroupManager().getGroupApplicationList()
+        const dataArr: any = [];
+        const res = await TencentImSDKPlugin.v2TIMManager
+            .getGroupManager()
+            .getGroupApplicationList();
         if (res.code === 0) {
             res.data?.groupApplicationList?.forEach((val, index) => {
                 dataArr.push({
@@ -207,29 +278,26 @@ const CheckboxComponent = (props) => {
                     unfillColor: 'white',
                     textStyle: styles.textStyle,
                     iconStyle: styles.iconStyle,
-                    info:{
-                        groupID:val.groupID,
+                    info: {
+                        groupID: val.groupID,
                         toUser: val.toUser,
                         addTime: val.addTime,
-                        type:val.typeƒ
-                    }
-                })
-
-            })
+                        type: val.type,
+                    },
+                });
+            });
         }
-        setCheckboxData(dataArr)
-    }
+        setCheckboxData(dataArr);
+    };
     return (
         <BouncyCheckboxGroup
             data={checkboxData}
             style={{ flexDirection: 'column' }}
             onChange={(selectedItem: ICheckboxButton) => {
-                if (selectedItem.text) setSelectedHandler(selectedItem)
+                if (selectedItem.text) setSelectedHandler(selectedItem);
             }}
         />
+    );
+};
 
-    )
-
-}
-
-export default CheckboxComponent
+export default CheckboxComponent;

@@ -50,4 +50,25 @@ class AdvancedMsgListener: NSObject, V2TIMAdvancedMsgListener {
         
         HydraThreadManager.subsc(promise: promise);
 	}
+    
+    public func onRecvMessageExtensionsChanged(_ msgID: String!, extensions: [V2TIMMessageExtension]!) {
+        var data = [String:Any]();
+        data["msgID"] = msgID ?? "";
+        var resList = [[String:Any]]();
+        for res:V2TIMMessageExtension in extensions ?? [] {
+            var resItem = [String: Any]();
+            resItem["extensionKey"] = res.extensionKey as Any;
+            resItem["extensionValue"] = res.extensionValue as Any;
+            resList.append(resItem);
+        }
+        data["extensions"] = resList;
+        CommonUtils.emmitEvent(eventName: eventName, eventType: ListenerType.onRecvMessageExtensionsChanged, data: data);
+    }
+    
+    public func onRecvMessageExtensionsDeleted(_ msgID: String!, extensionKeys: [String]!) {
+        var data = [String:Any]();
+        data["msgID"] = msgID ?? "";
+        data["extensionKeys"] = extensionKeys;
+        CommonUtils.emmitEvent(eventName: eventName, eventType: ListenerType.onRecvMessageExtensionsDeleted, data: data);
+    }
 }

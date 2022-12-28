@@ -22,6 +22,7 @@ import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMUserInfo;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+import com.tencent.imsdk.v2.V2TIMTopicInfo;
 
 import com.reactnativetimjs.util.CommonUtils;
 import org.json.JSONObject;
@@ -590,6 +591,30 @@ public class SDKManager {
                 data.put("groupID", groupID);
                 data.put("groupAttributeMap", groupAttributeMap);
                 makeaddGroupListenerEventData("onGroupAttributeChanged", data);
+            }
+
+            @Override
+            public void onTopicCreated(String groupID, String topicID) {
+                HashMap<String, Object> data = new HashMap<String, Object>();
+                data.put("groupID", groupID);
+                data.put("topicID", topicID);
+                makeaddGroupListenerEventData("onTopicCreated", data);
+            }
+
+            @Override
+            public void onTopicDeleted(String groupID, List<String> topicIDList) {
+                HashMap<String, Object> data = new HashMap<String, Object>();
+                data.put("groupID", groupID);
+                data.put("topicIDList", topicIDList);
+                makeaddGroupListenerEventData("onTopicDeleted", data);
+            }
+
+            @Override
+            public void onTopicInfoChanged(String groupID, V2TIMTopicInfo topicInfo) {
+                HashMap<String, Object> data = new HashMap<String, Object>();
+                data.put("groupID", groupID);
+                data.put("topicInfo", CommonUtils.convertV2TIMTopicInfoToMap(topicInfo));
+                makeaddGroupListenerEventData("onTopicInfoChanged", data);
             }
         };
         V2TIMManager.getInstance().addGroupListener(groupListener);

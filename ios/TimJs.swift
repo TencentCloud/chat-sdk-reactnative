@@ -190,6 +190,21 @@ class TimJs: RCTEventEmitter {
         case "getJoinedGroupList":
             groupManager.getJoinedGroupList(param: arguments, resolve: resolve);
             break;
+        case "getJoinedCommunityList":
+            groupManager.getJoinedCommunityList(param: arguments, resolve: resolve);
+            break;
+        case "createTopicInCommunity":
+            groupManager.createTopicInCommunity(param: arguments, resolve: resolve);
+            break;
+        case "deleteTopicFromCommunity":
+            groupManager.deleteTopicFromCommunity(param: arguments, resolve: resolve);
+            break;
+        case "setTopicInfo":
+            groupManager.setTopicInfo(param: arguments, resolve: resolve);
+            break;
+        case "getTopicInfoList":
+            groupManager.getTopicInfoList(param: arguments, resolve: resolve);
+            break;
         case "getGroupsInfo":
             groupManager.getGroupsInfo(param: arguments, resolve: resolve);
             break;
@@ -398,7 +413,22 @@ class TimJs: RCTEventEmitter {
 				break
 		case "removeAdvancedMsgListener":
 				messageManager.removeAdvancedMsgListener(param: arguments, resolve: resolve)
-				break
+				break;
+		case "getMessageOnlineUrl":
+            messageManager.getMessageOnlineUrl(param: arguments, resolve: resolve)
+            break;
+        case "downloadMessage":
+            messageManager.downloadMessage(param: arguments, resolve: resolve)
+            break;
+        case "getMessageExtensions":
+            messageManager.getMessageExtensions(param: arguments, resolve: resolve)
+            break;
+        case "deleteMessageExtensions":
+            messageManager.deleteMessageExtensions(param: arguments, resolve: resolve)
+            break;
+        case "setMessageExtensions":
+            messageManager.setMessageExtensions(param: arguments, resolve: resolve)
+            break;
 		case "getConversationList":
 			conversationManager.getConversationList(param: arguments, resolve: resolve)
 			break

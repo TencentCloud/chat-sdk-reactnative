@@ -218,10 +218,10 @@ PODS:
     - RCTTypeSafety
     - React
     - ReactCommon/turbomodule/core
-  - react-native-tim-js (0.1.6):
+  - react-native-tim-js (0.1.8):
     - HydraAsync
     - React-Core
-    - TXIMSDK_Plus_iOS (= 6.6.3002)
+    - TXIMSDK_Plus_iOS (= 6.9.3557)
   - React-perflogger (0.64.0)
   - React-RCTActionSheet (0.64.0):
     - React-Core/RCTActionSheetHeaders (= 0.64.0)
@@ -330,7 +330,7 @@ PODS:
     - React-RCTImage
   - RNVectorIcons (9.2.0):
     - React-Core
-  - TXIMSDK_Plus_iOS (6.6.3002)
+  - TXIMSDK_Plus_iOS (6.9.3557)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -497,7 +497,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: cffb727cf2f59bd5c0408e30b3dbe0b935f88835
   react-native-location: 5a40ec1cc6abf2f6d94df979f98ec76c3a415681
   react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
-  react-native-tim-js: f965c996ce2b291e36d88afed4c7ffdcf6302361
+  react-native-tim-js: d7f0e25259b72d8dfeee248ba556ca36255e9bee
   React-perflogger: 9c547d8f06b9bf00cb447f2b75e8d7f19b7e02af
   React-RCTActionSheet: 3080b6e12e0e1a5b313c8c0050699b5c794a1b11
   React-RCTAnimation: 3f96f21a497ae7dabf4d2f150ee43f906aaf516f
@@ -519,9 +519,9 @@ SPEC CHECKSUMS:
   RNReanimated: 7f3eef39b48facdb0b053873abdaafaa6a953b0d
   RNScreens: d6da2b9e29cf523832c2542f47bf1287318b1868
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
-  TXIMSDK_Plus_iOS: b725bdb1521efd26e12e12506a9de736e8ad4a6e
+  TXIMSDK_Plus_iOS: 1fa1c9e736c7c0fc3feb4f07c073427f01e00824
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
 
-PODFILE CHECKSUM: fcdca2c6276ae3d81dbb2dfa93a9b874a90edb1d
+PODFILE CHECKSUM: 8a06400b5b74fb602dbdbf19682d2a02ffd56e41
 
 COCOAPODS: 1.11.3

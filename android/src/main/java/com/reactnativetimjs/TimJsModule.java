@@ -50,6 +50,7 @@ public class TimJsModule extends ReactContextBaseJavaModule {
         TimJsModule.offlinePushManager = new OfflinePushManager();
         TimJsModule.signalingManager = new SignalingManager();
         TimJsModule.groupManager = new GroupManager();
+        CommonUtils.context=reactContext;
     }
 
     public static void sendEvent(String eventName, WritableMap params) {

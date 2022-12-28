@@ -8,19 +8,21 @@ import MultiCheckBoxModalComponent from '../commonComponents/MultiCheckboxModalC
 import mystylesheet from '../../stylesheets';
 const FindMessageComponent = () => {
     const [res, setRes] = useState<any>({});
-    const [conversationID, setConversationID] = useState<string>('未选择')
-    const [messages, setMessages] = useState<string>('[]')
-    const [messageList, setMessageList] = useState([])
+    const [conversationID, setConversationID] = useState<string>('未选择');
+    const [messages, setMessages] = useState<string>('[]');
+    const [messageList, setMessageList] = useState([]);
 
     const findMessage = async () => {
-        const res = await TencentImSDKPlugin.v2TIMManager.getMessageManager().findMessages(messageList)
-        setRes(res)
+        const res = await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .findMessages(messageList);
+        setRes(res);
     };
 
-    const setMessagesHandle = (messagelist)=>{
-        setMessages('['+messagelist.join(',')+']')
-        setMessageList(messagelist)
-    }
+    const setMessagesHandle = (messagelist) => {
+        setMessages('[' + messagelist.join(',') + ']');
+        setMessageList(messagelist);
+    };
 
     const CodeComponent = () => {
         return res.code !== undefined ? (
@@ -29,53 +31,67 @@ const FindMessageComponent = () => {
     };
 
     const MessageSelectComponent = () => {
-        const [visible, setVisible] = useState<boolean>(false)
+        const [visible, setVisible] = useState<boolean>(false);
         return (
             <View style={styles.friendgroupview}>
                 <View style={styles.selectContainer}>
-                    <TouchableOpacity onPress={()=>setVisible(true)}>
+                    <TouchableOpacity onPress={() => setVisible(true)}>
                         <View style={mystylesheet.buttonView}>
-                            <Text style={mystylesheet.buttonText}>选择消息</Text>
+                            <Text style={mystylesheet.buttonText}>
+                                选择消息
+                            </Text>
                         </View>
                     </TouchableOpacity>
                     <Text style={mystylesheet.selectedText}>{messages}</Text>
                 </View>
-                <MultiCheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setMessagesHandle} type={'message'} conversationID={conversationID}/>
+                <MultiCheckBoxModalComponent
+                    visible={visible}
+                    getVisible={setVisible}
+                    getUsername={setMessagesHandle}
+                    type={'message'}
+                    conversationID={conversationID}
+                />
             </View>
-            
-        )
-    }
+        );
+    };
 
     const ConversationSelectComponent = () => {
-        const [visible, setVisible] = useState<boolean>(false)
+        const [visible, setVisible] = useState<boolean>(false);
         return (
             <View style={styles.friendgroupview}>
                 <View style={styles.selectContainer}>
-                    <TouchableOpacity onPress={()=>setVisible(true)}>
+                    <TouchableOpacity onPress={() => setVisible(true)}>
                         <View style={mystylesheet.buttonView}>
-                            <Text style={mystylesheet.buttonText}>选择会话</Text>
+                            <Text style={mystylesheet.buttonText}>
+                                选择会话
+                            </Text>
                         </View>
                     </TouchableOpacity>
-                    <Text style={mystylesheet.selectedText}>{conversationID}</Text>
+                    <Text style={mystylesheet.selectedText}>
+                        {conversationID}
+                    </Text>
                 </View>
-                <CheckBoxModalComponent visible={visible} getVisible={setVisible} getUsername={setConversationID} type={'conversation'}/>
+                <CheckBoxModalComponent
+                    visible={visible}
+                    getVisible={setVisible}
+                    getUsername={setConversationID}
+                    type={'conversation'}
+                />
             </View>
-            
-        )
-    }
-
-
-
+        );
+    };
 
     return (
-        <View style={{height: '100%'}}>
+        <View style={{ height: '100%' }}>
             <ConversationSelectComponent />
-            <MessageSelectComponent/>
+            <MessageSelectComponent />
             <CommonButton
-                handler={() => { findMessage() }}
+                handler={() => {
+                    findMessage();
+                }}
                 content={'查询指定会话中的本地消息'}
-            ></CommonButton>
-            <CodeComponent></CodeComponent>
+            />
+            <CodeComponent />
         </View>
     );
 };
@@ -84,8 +100,8 @@ export default FindMessageComponent;
 const styles = StyleSheet.create({
     selectContainer: {
         flexDirection: 'row',
-        marginLeft:10,
-        marginRight:10
+        marginLeft: 10,
+        marginRight: 10,
     },
     selectView: {
         flexDirection: 'row',
@@ -96,6 +112,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     friendgroupview: {
-        marginTop: 10
-    }
-})
+        marginTop: 10,
+    },
+});

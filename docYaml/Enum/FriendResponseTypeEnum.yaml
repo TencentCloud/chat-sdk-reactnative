@@ -1,9 +1,0 @@
-type: enum
-name: FriendApplicationTypeEnum
-features: 建立好友关系时选择建立单向/双向好友关系
-ignore: false
-attributes:
-  - name: V2TIM_FRIEND_ACCEPT_AGREE
-    description: 同意添加单向好友
-  - name: V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD
-    description: 同意添加双向好友

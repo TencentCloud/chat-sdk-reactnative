@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "10.0" }
   s.source       = { :git => "https://github.com/XNeverGiveUp/react-native-tim-js.git", :tag => "#{s.version}" }
 
-  s.dependency 'TXIMSDK_Plus_iOS', "6.6.3002"
+  s.dependency 'TXIMSDK_Plus_iOS', "6.9.3557"
   s.dependency 'HydraAsync'
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"

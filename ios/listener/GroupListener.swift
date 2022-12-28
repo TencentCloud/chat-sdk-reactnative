@@ -165,5 +165,26 @@ class GroupListener: NSObject, V2TIMGroupListener {
 			"groupAttributeMap": attributes ?? NSMutableDictionary(),
 		]);
 	}
+
+	public func onTopicCreated(_ groupID: String!, topicID: String!) {
+		CommonUtils.emmitEvent(eventName: eventName, eventType: ListenerType.onTopicCreated, data: [
+			"groupID": groupID ?? "",
+            "topicID": topicID,
+		]);
+    }
+
+    public func onTopicChanged(_ groupID: String!, topicInfo: V2TIMTopicInfo!) {
+        CommonUtils.emmitEvent(eventName: eventName, eventType: ListenerType.onTopicInfoChanged, data: [
+			"groupID": groupID ?? "",
+            "topicInfo": V2TIMTopicInfoEntity.getDict(info: topicInfo),
+		]);
+    }
+
+    public func onTopicDeleted(_ groupID: String!, topicIDList: [String]!) {
+		CommonUtils.emmitEvent(eventName: eventName, eventType: ListenerType.onTopicDeleted, data: [
+			"groupID": groupID ?? "",
+            "topicIDList": topicIDList ?? [],
+		]);
+    }
 	
 }

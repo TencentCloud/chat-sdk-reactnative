@@ -20,6 +20,9 @@ import type { V2TimMsgCreateInfoResult } from '../interface/v2TimMsgCreateInfoRe
 import type { V2TimOfflinePushInfo } from '../interface/v2TimOfflinePushInfo';
 import type { V2TimReceiveMessageOptInfo } from '../interface/v2TimReceiveMessageOptInfo';
 import type { V2TimValueCallback } from '../interface/v2TimValueCallback';
+import type { V2TimMessageOnlineUrl } from 'src/interface/V2TimMessageOnlineUrl';
+import type { V2TimMessageExtension } from 'src/interface/V2TimMessageExtension';
+import type { V2TimMessageExtensionResult } from 'src/interface/V2TimMessageExtensionResult';
 
 export class V2TIMMessageManager {
     private manager: string = 'messageManager';
@@ -55,6 +58,24 @@ export class V2TIMMessageManager {
                 case 'onRecvMessageModified':
                     listener.onRecvMessageModified &&
                         listener.onRecvMessageModified(data);
+                    break;
+                case 'onRecvMessageExtensionsChanged':
+                    listener.onRecvMessageExtensionsChanged &&
+                        listener.onRecvMessageExtensionsChanged(
+                            data.msgID,
+                            data.extensions
+                        );
+                    break;
+                case 'onRecvMessageExtensionsDeleted':
+                    listener.onRecvMessageExtensionsDeleted &&
+                        listener.onRecvMessageExtensionsDeleted(
+                            data.msgID,
+                            data.extensionKeys
+                        );
+                    break;
+                case 'onMessageDownloadProgressCallback':
+                    listener.onMessageDownloadProgressCallback &&
+                        listener.onMessageDownloadProgressCallback(data);
                     break;
             }
         });
@@ -367,6 +388,7 @@ export class V2TIMMessageManager {
         onlineUserOnly = false,
         isExcludedFromLastMessage = false,
         isExcludedFromUnreadCount = false,
+        isSupportMessageExtension = false,
         needReadReceipt = false,
         offlinePushInfo,
         cloudCustomData,
@@ -379,6 +401,7 @@ export class V2TIMMessageManager {
         onlineUserOnly?: boolean;
         isExcludedFromUnreadCount?: boolean;
         isExcludedFromLastMessage?: boolean;
+        isSupportMessageExtension?: boolean;
         needReadReceipt?: boolean;
         offlinePushInfo?: V2TimOfflinePushInfo;
         cloudCustomData?: string;
@@ -392,6 +415,7 @@ export class V2TIMMessageManager {
             groupID,
             isExcludedFromLastMessage,
             isExcludedFromUnreadCount,
+            isSupportMessageExtension,
             needReadReceipt,
             offlinePushInfo,
             cloudCustomData,
@@ -953,6 +977,81 @@ export class V2TIMMessageManager {
     ): Promise<V2TimValueCallback<V2TimMessage[]>> {
         return this.nativeModule.call(this.manager, 'downloadMergerMessage', {
             msgID,
+        });
+    }
+
+    /**
+     * ### 设置消息扩展
+     * @param msgID //需要获取消息URL的消息id
+     * @param extensions //消息扩展字段
+     */
+    public setMessageExtensions(
+        msgID: string,
+        extensions: V2TimMessageExtension[]
+    ): Promise<V2TimValueCallback<V2TimMessageExtensionResult[]>> {
+        return this.nativeModule.call(this.manager, 'setMessageExtensions', {
+            msgID,
+            extensions,
+        });
+    }
+
+    /**
+     * ### 获取消息扩展
+     * @param msgID //需要获取扩展信息的消息id
+     */
+    public getMessageExtensions(
+        msgID: string
+    ): Promise<V2TimValueCallback<V2TimMessageExtension[]>> {
+        return this.nativeModule.call(this.manager, 'getMessageExtensions', {
+            msgID,
+        });
+    }
+
+    /**
+     * ### 删除消息扩展
+     * @param msgID //需要获取消息URL的消息id
+     * @param keys //需要删除的扩展字段的key的列表
+     */
+    public deleteMessageExtensions(
+        msgID: string,
+        keys: string[]
+    ): Promise<V2TimValueCallback<V2TimMessageExtensionResult[]>> {
+        return this.nativeModule.call(this.manager, 'deleteMessageExtensions', {
+            msgID,
+            keys,
+        });
+    }
+
+    /**
+     * ### 获取多媒体消息URL
+     * @param msgID //需要获取消息URL的消息id
+     */
+    public getMessageOnlineUrl(
+        msgID: string
+    ): Promise<V2TimValueCallback<V2TimMessageOnlineUrl>> {
+        return this.nativeModule.call(this.manager, 'getMessageOnlineUrl', {
+            msgID,
+        });
+    }
+
+    /**
+     * ### 下载多媒体消息
+     * @param msgID //需要获取消息URL的消息id
+     * @param messageType //多媒体消息类型
+     * @param imageType //图片类型，仅messageType为图片消息是有效
+     * @param isSnapshot //是否是视频封面，仅messageType为视频消息是有效
+     */
+    public downloadMessage(
+        msgID: string,
+        messageType: number,
+        imageType: number,
+        isSnapshot: boolean
+    ): Promise<V2TimCallback> {
+        return this.nativeModule.call(this.manager, 'downloadMessage', {
+            msgID,
+            messageType,
+            imageType,
+            isSnapshot,
         });
     }
 }

@@ -2,6 +2,14 @@ import ImSDK_Plus
 import Hydra
 //  腾讯云工具类
 
+typealias OnProgress = (_ isFinish:Bool, _ isError:Bool, _ currentSize:Int, _ totalSize:Int,  _ msgID:String,_ type:Int,_ isSnapshot:Bool,_ path:String,_ error_code:Int32,_ error_desc:String?) -> Void
+
+class DownloadCallback {
+    var onProgress:OnProgress;
+    init(onProgress: @escaping OnProgress) {
+        self.onProgress = onProgress
+    }
+}
 public class TencentImUtils {
   public static func createMessage(param: Dictionary<String, Any>, resolve: @escaping RCTPromiseResolveBlock, type: Int) -> V2TIMMessage {
     var messageMap: Dictionary<String, Any> = param;
@@ -26,9 +34,9 @@ public class TencentImUtils {
         break
       case 2:
         message = (V2TIMManager.sharedInstance()?.createCustomMessage(
-            (messageMap["data"] as? String)?.data(using: String.Encoding.utf8, allowLossyConversion: true),
+            data:(messageMap["data"] as? String)?.data(using: String.Encoding.utf8, allowLossyConversion: true),
 			desc: messageMap["desc"] as? String,
-			extension: messageMap["extension"] as? String
+			ext: messageMap["extension"] as? String
         ))  ?? V2TIMMessage();
         break
       case 3:

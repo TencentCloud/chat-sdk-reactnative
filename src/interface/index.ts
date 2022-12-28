@@ -39,3 +39,5 @@ export * from './v2TimFriendSearchParam';
 export * from './v2TimConversationListener';
 export * from './v2TimConversationOperationResult';
 export * from './v2TimConversationListFilter';
+export * from './v2TimGroupChangeInfo';
+export * from './v2TimGroupMemberInfo';
